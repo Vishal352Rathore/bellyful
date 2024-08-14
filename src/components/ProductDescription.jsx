@@ -225,7 +225,7 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
       <div className="w-full p-4 lg:p-20">
         <a
           href="#"
-          className="block p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700"
+          className="block p-4 bg-white border border-gray-200 rounded-lg shadow-md"
         >
           <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
             Description
