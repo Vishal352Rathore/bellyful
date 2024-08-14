@@ -56,7 +56,7 @@ const Footer = () => {
         
         <div className="flex flex-col space-y-4 ">
           <p className="text-lg font-semibold cursor-pointer">Subscribe to receive deals and promotions</p>
-          <div className="bg-white rounded-3xl flex items-center w-[300px] md:w-[300px]">
+          <div className="bg-white rounded-3xl flex items-center">
             <input
               type="email"
               placeholder="Enter Email Address"
