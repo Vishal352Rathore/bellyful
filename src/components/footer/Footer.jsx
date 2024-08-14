@@ -54,9 +54,9 @@ const Footer = () => {
           </ul>
         </div>
         
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 ">
           <p className="text-lg font-semibold cursor-pointer">Subscribe to receive deals and promotions</p>
-          <div className="bg-white rounded-3xl flex items-center">
+          <div className="bg-white rounded-3xl flex items-center w-[325px]">
             <input
               type="email"
               placeholder="Enter Email Address"
