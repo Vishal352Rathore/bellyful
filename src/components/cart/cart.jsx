@@ -259,6 +259,6 @@ const cart = () => {
   );
 };
 
-// Test comment 2
+// Test comment 3
 
 export default cart;
