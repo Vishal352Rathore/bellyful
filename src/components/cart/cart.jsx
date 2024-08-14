@@ -121,7 +121,7 @@ const cart = () => {
         {/* First Row */}
         <div className="flex gap-6 mt-8 md:mt-14">
           {/* Product Section */}
-          <div className="p-4 flex flex-col items-center justify-center w-full sm:w-1/3"></div>
+          <div className="p-4 flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3"></div>
 
           <div className=" p-4 flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3">
             <img
@@ -130,7 +130,7 @@ const cart = () => {
               className="w-[50px] h-[50px] md:w-[59px] md:h-[59px] mb-4"
             />
           </div>
-          <div className=" p-4 flex flex-col items-center justify-center w-full md:w-1/3">
+          <div className=" p-4 flex flex-col items-center justify-center w-full md:w-1/6 md:w-1/3">
             <img
               src={amazonShortLogo}
               alt="amazonShortLogo"
