@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import logo from "../../images/belliful_logo.png";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import { Link } from "react-router-dom";
 import LoginModal from "../LoginModel";
+import './Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,10 +13,23 @@ const Header = () => {
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-  
+
   const handleMenuItemClick = () => {
     setIsMenuOpen(false); // Close the menu
   };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    // Clean up the class when the component is unmounted
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [isModalOpen]);
 
   return (
     <>
