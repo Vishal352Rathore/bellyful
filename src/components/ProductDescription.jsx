@@ -225,13 +225,13 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
       <div className="w-full p-4 lg:p-20">
         <a
           href="#"
-          className="block p-4 bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700"
+          className="block p-4 bg-white border border-gray-200 rounded-lg shadow-md"
         >
-          <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h5 className="text-2xl font-bold tracking-tight text-gray-900">
             Description
           </h5>
           <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
-          <p className="font-normal text-gray-700 dark:text-gray-400 line-clamp-3">
+          <p className="font-normal line-clamp-3">
             People start migrating from conventional to organic products because
             of their health benefits. Comparing chemically treated food versus
             organic food reveals that the latter is more nutrient-dense. The
