@@ -29,7 +29,7 @@ const Signup = ({ toggleForm }) => {
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-4">
         <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-2 " />
 
-          <div className="w-full mt-4">
+          <div className="w-full">
             <form className="w-full mx-auto" method="POST" action="#">
               {/* Name and Contact Info */}
 
