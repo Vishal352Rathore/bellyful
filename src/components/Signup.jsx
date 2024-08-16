@@ -104,7 +104,7 @@ const Signup = ({ toggleForm }) => {
                 <div className="flex flex-col w-full md:w-1/2 px-2">
                   <label
                     htmlFor="dob"
-                    className="text-black font-bold text-base text-md"
+                    className="text-black font-bold text-base text-md m-1"
                   >
                     Date of Birth
                   </label>
