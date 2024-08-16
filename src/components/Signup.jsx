@@ -9,13 +9,13 @@ import Stack from "@mui/material/Stack";
 // Reusable Input Component
 const InputField = ({ id, type, label, name, placeholder, required }) => (
   <div className="flex flex-col md:w-[48%] w-full">
-    <label htmlFor={id} className="text-black font-bold text-base">
+    <label htmlFor={id} className="text-black font-bold text-base text-md">
       {label}
     </label>
     <input
       id={id}
       type={type}
-      className="h-[35px] w-full px-4 border rounded-lg border-[#E3E3E3]"
+      className="h-[30px] w-full px-4 border rounded-lg border-[#E3E3E3]"
       name={name}
       placeholder={placeholder}
       required={required}
@@ -104,7 +104,7 @@ const Signup = ({ toggleForm }) => {
                 <div className="flex flex-col w-full md:w-1/2 px-2">
                   <label
                     htmlFor="dob"
-                    className="text-black font-bold text-base"
+                    className="text-black font-bold text-base text-md"
                   >
                     Date of Birth
                   </label>
@@ -122,7 +122,7 @@ const Signup = ({ toggleForm }) => {
               <div className="flex flex-col mt-4">
                 <button
                   type="submit"
-                  className="h-[42px] w-full bg-[#6CBD44] hover:bg-[#6CBD44] text-white text-sm font-semibold py-2 px-4 rounded"
+                  className="h-[40px] w-full bg-[#6CBD44] hover:bg-[#6CBD44] text-white text-sm font-semibold py-2 px-4 rounded"
                 >
                   Register
                 </button>
