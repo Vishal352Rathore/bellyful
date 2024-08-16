@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 // Reusable Input Component
 const InputField = ({ id, type, label, name, placeholder, required }) => (
   <div className="flex flex-col md:w-[48%] w-full">
-    <label htmlFor={id} className="text-black font-bold text-base text-md">
+    <label htmlFor={id} className="text-black font-bold text-base text-sm">
       {label}
     </label>
     <input
@@ -136,7 +136,7 @@ const Signup = ({ toggleForm }) => {
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
-            <div className="flex justify-center items-center mb-4">
+            <div className="flex justify-center items-center mb-2">
               <Stack direction="row" spacing={2} alignItems="center">
                 <Avatar
                   alt="google"
