@@ -13,7 +13,7 @@ const LoginModal = ({ closeModal }) => {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center  justify-center z-50">
       <div
-        className="relative bg-white rounded-2xl shadow-lg w-full max-w-[1174px] md:h-[673px] h-[500px] h-auto flex"
+        className="relative bg-white rounded-2xl shadow-lg w-full max-w-[1174px] md:h-[673px] h-[500px] flex"
         // style={{ height: modalHeight }}
       >
         <button
