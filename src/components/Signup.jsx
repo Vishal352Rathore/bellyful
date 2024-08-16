@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../images/image 1.png";
+import logo from "../images/logo (2).png";
 import closeup from "../images/close-up.png";
 import google from "../images/google.png";
 import facebook from "../images/facebook.png";
@@ -26,7 +26,7 @@ const Signup = ({ toggleForm }) => {
   return (
     <div className="flex flex-col items-center w-full ">
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-y-scroll md:overflow-hidden">
-        <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8">
+        <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-4">
         <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-2 " />
 
           <div className="w-full mt-4">
@@ -111,7 +111,7 @@ const Signup = ({ toggleForm }) => {
                   <input
                     id="dob"
                     type="date"
-                    className="h-[35px] w-full px-4 border rounded-lg border-[#E3E3E3]"
+                    className="h-[30px] w-full px-4 border rounded-lg border-[#E3E3E3] text-gray-400"
                     name="dob"
                     required
                   />
