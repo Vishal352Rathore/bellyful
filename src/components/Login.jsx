@@ -8,9 +8,8 @@ import Stack from "@mui/material/Stack";
 
 const Login = ({ toggleForm }) => {
   return (
-    <div className="flex h-full
-     w-full items-center justify-center md:p-0">
-      <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-hidden">
+    <div className="flex h-full w-full items-center justify-center md:p-0">
+      <div className="flex flex-col justify-center md:flex-row w-full h-full rounded-2xl bg-white border overflow-hidden">
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6 md:p-8">
           <img
             src={logo}
