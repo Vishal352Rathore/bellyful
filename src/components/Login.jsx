@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../images/image 1.png";
+import logo from "../images/logo (2).png";
 import closeup from "../images/close-up.png";
 import google from "../images/google.png";
 import facebook from "../images/facebook.png";

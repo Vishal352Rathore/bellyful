@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 // Reusable Input Component
 const InputField = ({ id, type, label, name, placeholder, required }) => (
   <div className="flex flex-col md:w-[48%] w-full">
-    <label htmlFor={id} className="text-black font-bold text-base text-sm">
+    <label htmlFor={id} className="text-black font-bold text-base text-sm m-1">
       {label}
     </label>
     <input
