@@ -27,7 +27,7 @@ const Signup = ({ toggleForm }) => {
     <div className="flex flex-col items-center w-full ">
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-y-scroll md:overflow-hidden">
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8">
-        <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-4 " />
+        <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-2 " />
 
           <div className="w-full mt-4">
             <form className="w-full mx-auto" method="POST" action="#">
@@ -52,7 +52,7 @@ const Signup = ({ toggleForm }) => {
                 />
               </div>
 
-              <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8 ">
+              <div className="flex flex-col md:flex-row md:space-x-4 md:mt-4 ">
                 <InputField
                   id="mobile-number"
                   type="text"
@@ -72,7 +72,7 @@ const Signup = ({ toggleForm }) => {
               </div>
 
               {/* Password and Confirm Password */}
-              <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
+              <div className="flex flex-col md:flex-row md:space-x-4 md:mt-4">
                 <InputField
                   id="password"
                   type="password"
@@ -92,7 +92,7 @@ const Signup = ({ toggleForm }) => {
               </div>
 
               {/* Nationality and Date of Birth */}
-              <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
+              <div className="flex flex-col md:flex-row md:space-x-4 md:mt-4">
                 <InputField
                   id="nationality"
                   type="text"
@@ -119,7 +119,7 @@ const Signup = ({ toggleForm }) => {
               </div>
 
               {/* Submit Button */}
-              <div className="flex flex-col mt-8">
+              <div className="flex flex-col mt-4">
                 <button
                   type="submit"
                   className="h-[42px] w-full bg-[#6CBD44] hover:bg-[#6CBD44] text-white text-sm font-semibold py-2 px-4 rounded"
@@ -130,7 +130,7 @@ const Signup = ({ toggleForm }) => {
             </form>
 
             {/* Divider and Social Media Links */}
-            <div className="flex items-center text-center my-4">
+            <div className="flex items-center text-center my-2">
               <div className="flex-grow border-t border-gray-300"></div>
               <span className="mx-4 text-gray-600">OR</span>
               <div className="flex-grow border-t border-gray-300"></div>
@@ -152,7 +152,7 @@ const Signup = ({ toggleForm }) => {
             </div>
 
             {/* Login Link */}
-            <div className="flex justify-center items-center pt-4">
+            <div className="flex justify-center items-center">
               <p className="text-sm font-semibold">
                 Already have an account?{" "}
                 <span
