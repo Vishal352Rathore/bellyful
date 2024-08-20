@@ -8,12 +8,13 @@ const LoginModal = ({ closeModal }) => {
   const toggleForm = () => setShowSignup(!showSignup);
 
   // Conditional height for the modal based on the form being shown
-  const modalHeight = showSignup ? '673px' : '';
+  const modalHeight = showSignup ? '530px' : '';
+  
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center  justify-center z-50">
       <div
-        className="relative bg-white rounded-2xl shadow-lg w-full max-w-[1174px] md:h-[673px] h-auto flex"
+        className="relative bg-white rounded-2xl shadow-lg w-full max-w-[1174px] md:h-auto  h-[550px]  flex"
         style={{ height: modalHeight }}
       >
         <button
