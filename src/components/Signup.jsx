@@ -10,13 +10,13 @@ import Stack from "@mui/material/Stack";
 // Reusable Input Component
 const InputField = ({ id, type, label, name, placeholder, required, value, onChange }) => (
   <div className="flex flex-col md:w-[48%] w-full">
-    <label htmlFor={id} className="text-black font-bold text-base">
+    <label htmlFor={id} className="text-black font-bold text-base text-sm m-1">
       {label}
     </label>
     <input
       id={id}
       type={type}
-      className="h-[35px] w-full px-4 border rounded-lg border-[#E3E3E3]"
+      className="h-[30px] w-full px-4 border rounded-lg border-[#E3E3E3]"
       name={name}
       placeholder={placeholder}
       required={required}

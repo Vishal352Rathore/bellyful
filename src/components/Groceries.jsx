@@ -44,14 +44,14 @@ const Groceries = () => {
           alt="Background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute top-0 right-0 h-full flex items-center justify-end p-2 md:p-4 lg:p-8">
+        <div className="absolute top-0 right-5 h-full flex items-center justify-end p-2 md:p-4 lg:p-8">
           <img
             src={pngitem}
             alt="Groceries"
             className="w-[150px] md:w-[300px] lg:w-[556px] h-auto object-contain"
           />
         </div>
-        <div className="absolute top-1/2 left-20 md:left-4 lg:left-[189px] transform -translate-y-1/2 flex flex-col items-start md:items-start p-2 md:p-4 lg:p-8">
+        <div className="absolute top-1/2 left-5 md:left-4 lg:left-[135px] transform -translate-y-1/2 flex flex-col items-start md:items-start p-2 md:p-4 lg:p-8">
           <div className="text-white font-sans text-left md:text-left">
             <p className="text-2xl md:text-3xl lg:text-5xl font-bold text-[#000000]">
               Groceries

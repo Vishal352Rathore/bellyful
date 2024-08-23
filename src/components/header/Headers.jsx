@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import LoginModal from "../LoginModel";
 import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
+import './Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,6 +59,18 @@ const Header = () => {
       )
     );
   }, [subcategories]);
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    // Clean up the class when the component is unmounted
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [isModalOpen]);
 
   return (
     <>
