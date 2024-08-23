@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Login from './Login';
 import Signup from './Signup';
 
-const LoginModal = ({ closeModal }) => {
+const LoginModal = ({ closeModal ,setModalOpen }) => {
   const [showSignup, setShowSignup] = useState(false);
   const toggleForm = () => setShowSignup(!showSignup);
 
@@ -16,7 +16,7 @@ const LoginModal = ({ closeModal }) => {
         className = "relative bg-white rounded-2xl shadow-lg w-full max-w-[1074px] md:h-auto h-[550px] flex"
         style={{ height: modalHeight }}
           >
-        <button
+        {/* <button
           onClick={closeModal}
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
           aria-label="Close"
@@ -35,11 +35,11 @@ const LoginModal = ({ closeModal }) => {
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </button>
+        </button> */}
         {showSignup ? (
           <Signup toggleForm={toggleForm} />
         ) : (
-          <Login toggleForm={toggleForm} />
+          <Login toggleForm={toggleForm}  setModalOpen={setModalOpen}/>
         )}
       </div>
     </div>,

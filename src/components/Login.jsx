@@ -7,7 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import useApi from "../Customhook/useApi";
 
-const Login = ({ toggleForm }) => {
+const Login = ({ toggleForm ,setModalOpen}) => {
   const [postData, setPostData] = useState({ email: "", password: "" });
   const [triggerApiCall, setTriggerApiCall] = useState(false);
 
@@ -31,11 +31,10 @@ const Login = ({ toggleForm }) => {
     if (data?.status) {
       console.log("Login successful:", data);
       localStorage.setItem("userToken",data.items);
-      // You can handle the success response, like redirecting the user or saving the token
+      setModalOpen(false);
     }
     if (error) {
       console.error("Error:", error);
-      // Handle the error, show an error message to the user
     }
   }, [data, error]);
 

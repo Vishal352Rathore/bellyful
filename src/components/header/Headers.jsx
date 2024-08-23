@@ -33,6 +33,13 @@ const Header = () => {
 
   var token = localStorage.getItem("userToken");
 
+  useEffect(() => {
+  if(!token){
+    setModalOpen(true);
+  }
+  }, [])
+  
+
   const { data, loading, error } = useApi(
     process.env.REACT_APP_GET_CATEGORY_API_URL,
     "GET",
@@ -152,7 +159,7 @@ const Header = () => {
                   How it Works
                 </a>
               </li>
-              <li className="flex items-center space-x-1">
+              {/* <li className="flex items-center space-x-1">
                 <button
                   onClick={openModal}
                   className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500 flex items-center"
@@ -160,7 +167,7 @@ const Header = () => {
                   <PermIdentityIcon className="mr-1" />
                   LogIn
                 </button>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -242,7 +249,7 @@ const Header = () => {
                 Cart
               </Link>
             </li>
-            <li>
+            {/* <li>
               <button
                 onClick={() => {
                   openModal();
@@ -253,11 +260,11 @@ const Header = () => {
                 <PermIdentityIcon className="mr-1" />
                 LogIn
               </button>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
-      {isModalOpen && <LoginModal closeModal={closeModal} />}
+      {isModalOpen && <LoginModal closeModal={closeModal} setModalOpen={setModalOpen}/>}
 
       {/* Bottom Navigation */}
       <div className="bg-green-900 text-white">

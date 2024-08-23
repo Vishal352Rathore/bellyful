@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useApi from '../Customhook/useApi';
+import useApi from "../Customhook/useApi";
 import logo from "../images/image 1.png";
 import closeup from "../images/close-up.png";
 import google from "../images/google.png";
@@ -8,7 +8,16 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 
 // Reusable Input Component
-const InputField = ({ id, type, label, name, placeholder, required, value, onChange }) => (
+const InputField = ({
+  id,
+  type,
+  label,
+  name,
+  placeholder,
+  required,
+  value,
+  onChange,
+}) => (
   <div className="flex flex-col md:w-[48%] w-full">
     <label htmlFor={id} className="text-black font-bold text-base text-sm m-1">
       {label}
@@ -28,15 +37,15 @@ const InputField = ({ id, type, label, name, placeholder, required, value, onCha
 
 const Signup = ({ toggleForm }) => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    mobileNumber: '',
-    countryCode: '91', // Default value for country code
-    email: '',
-    password: '',
-    confirmPassword:"",
-    nationality: '',
-    dateOfBirth: '',
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
+    countryCode: "91", // Default value for country code
+    email: "",
+    password: "",
+    confirmPassword: "",
+    nationality: "",
+    dateOfBirth: "",
   });
 
   const [countryCodes, setCountryCodes] = useState([]);
@@ -44,7 +53,7 @@ const Signup = ({ toggleForm }) => {
   const [submitForm, setSubmitForm] = useState(false);
   const { data, loading, error } = useApi(
     submitForm ? `${process.env.REACT_APP_SIGNUP_API_URL}` : null,
-    'POST',
+    "POST",
     submitForm ? formData : null
   );
 
@@ -63,24 +72,26 @@ const Signup = ({ toggleForm }) => {
     // Fetch country codes and nationalities from REST Countries API
     const fetchCountryData = async () => {
       try {
-        const response = await fetch('https://restcountries.com/v3.1/all');
+        const response = await fetch("https://restcountries.com/v3.1/all");
         const countries = await response.json();
         const codes = countries
-          .map(country => ({
+          .map((country) => ({
             name: country.name.common,
-            code: country.idd.root + (country.idd.suffixes ? country.idd.suffixes[0] : '')
+            code:
+              country.idd.root +
+              (country.idd.suffixes ? country.idd.suffixes[0] : ""),
           }))
-          .filter(c => c.code) // Remove countries without a dialing code
+          .filter((c) => c.code) // Remove countries without a dialing code
           .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically by name
 
         const nationalities = countries
-          .map(country => country.name.common)
+          .map((country) => country.name.common)
           .sort((a, b) => a.localeCompare(b)); // Sort alphabetically by nationality
 
         setCountryCodes(codes);
         setNationalities(nationalities); // Set nationalities
       } catch (error) {
-        console.error('Error fetching country data:', error);
+        console.error("Error fetching country data:", error);
       }
     };
 
@@ -103,23 +114,23 @@ const Signup = ({ toggleForm }) => {
 
   useEffect(() => {
     if (data) {
-      console.log('Signup successful:', data);
+      console.log("Signup successful:", data);
       // Reset form and submitForm state only if the signup was successful
       setFormData({
-        firstName: '',
-        lastName: '',
-        mobileNumber: '',
-        countryCode: '91',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        nationality: '',
-        dateOfBirth: '',
+        firstName: "",
+        lastName: "",
+        mobileNumber: "",
+        countryCode: "91",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        nationality: "",
+        dateOfBirth: "",
       });
       setSubmitForm(false); // Reset to prevent infinite loop
     }
     if (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       setSubmitForm(false); // Also reset on error to stop repeated submissions
     }
   }, [data, error]);
@@ -132,8 +143,12 @@ const Signup = ({ toggleForm }) => {
           <div className="w-full mt-4">
             {data ? (
               <div className="text-center">
-                <h2 className="text-green-500 text-lg font-bold">Registration successful!</h2>
-                <p className="text-gray-600 mt-2">You have registered successfully.</p>
+                <h2 className="text-green-500 text-lg font-bold">
+                  Registration successful!
+                </h2>
+                <p className="text-gray-600 mt-2">
+                  You have registered successfully.
+                </p>
               </div>
             ) : (
               <form className="w-full mx-auto" onSubmit={handleSubmit}>
@@ -161,36 +176,42 @@ const Signup = ({ toggleForm }) => {
                 </div>
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8 ">
                   <div className="flex flex-col md:w-[48%] w-full">
-                    <label htmlFor="country-code" className="text-black font-bold text-base">
-                      Country Code
+                    <label
+                      htmlFor={"mobile-number"}
+                      className="text-black font-bold text-base text-sm m-1"
+                    >
+                      {"Mobile Number"}
                     </label>
+                    <div className="flex border rounded-lg border-[#E3E3E3]">
                     <select
                       id="country-code"
                       name="countryCode"
-                      className="h-[35px] w-full px-4 border rounded-lg border-[#E3E3E3]"
+                      className="h-[30px] md:w-[25%]"
                       value={formData.countryCode}
                       onChange={handleCountryCodeChange}
                       required
                     >
                       {countryCodes.map(({ name, code }, index) => (
                         <option key={`${code}-${index}`} value={code}>
-                          ({code})
+                          {code}
                         </option>
                       ))}
                     </select>
+                      <input
+                        id="mobile-number"
+                        type="text"
+                        className="h-[30px] md:w-[75%] px-4 "
+                        name="mobileNumber"
+                        placeholder="Mobile Number"
+                        required
+                        value={formData.mobileNumber}
+                        onChange={handleInputChange}
+                      />
+                    
+                    </div>
+                
                   </div>
-                  <InputField
-                    id="mobile-number"
-                    type="text"
-                    label="Mobile Number"
-                    name="mobileNumber"
-                    placeholder="Mobile Number"
-                    required
-                    value={formData.mobileNumber}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
+
                   <InputField
                     id="email"
                     type="email"
@@ -201,7 +222,9 @@ const Signup = ({ toggleForm }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                   />
+                  {/* </div> */}
                 </div>
+               
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
                   <InputField
                     id="password"
@@ -226,7 +249,10 @@ const Signup = ({ toggleForm }) => {
                 </div>
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
                   <div className="flex flex-col md:w-[48%] w-full">
-                    <label htmlFor="nationality" className="text-black font-bold text-base">
+                    <label
+                      htmlFor="nationality"
+                      className="text-black font-bold text-base"
+                    >
                       Nationality
                     </label>
                     <select
@@ -238,14 +264,20 @@ const Signup = ({ toggleForm }) => {
                       required
                     >
                       {nationalities.map((nationality, index) => (
-                        <option key={`${nationality}-${index}`} value={nationality}>
+                        <option
+                          key={`${nationality}-${index}`}
+                          value={nationality}
+                        >
                           {nationality}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div className="flex flex-col w-full md:w-1/2 px-2">
-                    <label htmlFor="dob" className="text-black font-bold text-base">
+                    <label
+                      htmlFor="dob"
+                      className="text-black font-bold text-base"
+                    >
                       Date of Birth
                     </label>
                     <input
@@ -264,9 +296,11 @@ const Signup = ({ toggleForm }) => {
                     type="submit"
                     className="h-[42px] w-full bg-[#6CBD44] hover:bg-[#6CBD44] text-white text-sm font-semibold py-2 px-4 rounded"
                   >
-                    {loading ? 'Registering...' : 'Register'}
+                    {loading ? "Registering..." : "Register"}
                   </button>
-                  {error && <p className="text-red-500 mt-2">{error.message}</p>}
+                  {error && (
+                    <p className="text-red-500 mt-2">{error.message}</p>
+                  )}
                 </div>
               </form>
             )}
@@ -280,14 +314,25 @@ const Signup = ({ toggleForm }) => {
                 </div>
                 <div className="flex justify-center items-center mb-4">
                   <Stack direction="row" spacing={2} alignItems="center">
-                    <Avatar alt="google" src={google} sx={{ width: 24, height: 24 }} />
-                    <Avatar alt="facebook" src={facebook} sx={{ width: 24, height: 24 }} />
+                    <Avatar
+                      alt="google"
+                      src={google}
+                      sx={{ width: 24, height: 24 }}
+                    />
+                    <Avatar
+                      alt="facebook"
+                      src={facebook}
+                      sx={{ width: 24, height: 24 }}
+                    />
                   </Stack>
                 </div>
                 <div className="flex justify-center items-center pt-4">
                   <p className="text-sm font-semibold">
                     Already have an account?{" "}
-                    <span className="text-[#6CBD44] cursor-pointer" onClick={toggleForm}>
+                    <span
+                      className="text-[#6CBD44] cursor-pointer"
+                      onClick={toggleForm}
+                    >
                       Login Now
                     </span>
                   </p>
@@ -296,7 +341,10 @@ const Signup = ({ toggleForm }) => {
             )}
           </div>
         </div>
-        <div className="hidden md:block w-1/2 h-full bg-cover bg-center" style={{ backgroundImage: `url(${closeup})` }}></div>
+        <div
+          className="hidden md:block w-1/2 h-full bg-cover bg-center"
+          style={{ backgroundImage: `url(${closeup})` }}
+        ></div>
       </div>
     </div>
   );
