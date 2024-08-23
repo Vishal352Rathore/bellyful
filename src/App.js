@@ -26,9 +26,14 @@ function App() {
             <Route path="subcategory" element={<SubCategory />} />
             <Route path="Faqs" element={<Faqs />} />
             <Route path="Groceries" element={<Groceries />} />
-            <Route path="subcategory/ProductDescription" element={<ProductDescription/>} />
+            <Route path="Groceries/category" element={<Groceries />} />
+            <Route path="Groceries/category/subcategory" element={<SubCategory/>} />
+            <Route path="Groceries/subcategory" element={<SubCategory/>} />
+            <Route path="Groceries/category/subcategory/ProductDescription" element={<ProductDescription/>} />
+            <Route path="Groceries/subcategory/ProductDescription" element={<ProductDescription/>} />
             <Route path="Cart" element={<Cart />} />
-            <Route path="subcategory/ProductDescription/Cart" element={<Cart />} />
+            <Route path="Groceries/category/subcategory/ProductDescription/Cart" element={<Cart />} />
+            <Route path="Groceries/subcategory/ProductDescription/Cart" element={<Cart />} />
           </Route>
         </Routes>
       </BrowserRouter>

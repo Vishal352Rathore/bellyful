@@ -1,21 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "../../images/belliful_logo.png";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import { Link } from "react-router-dom";
 import LoginModal from "../LoginModel";
+import AllCategoryDropdown from "../ui/DropDown";
+import useApi from "../../Customhook/useApi";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [subcategories, setSubcategories] = useState([]);
+  const [categories, setCategories] = useState([
+    {
+      name: "Household Cleaners",
+      subcategories: [], // Initialize with empty array
+    },
+    {
+      name: "Grocery",
+      subcategories: [{ name: "Subcategory 2-1" }, { name: "Subcategory 2-2" }],
+    },
+  ]);
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-  
+
   const handleMenuItemClick = () => {
     setIsMenuOpen(false); // Close the menu
   };
+
+  var token = localStorage.getItem("userToken");
+
+  const { data, loading, error } = useApi(
+    process.env.REACT_APP_GET_CATEGORY_API_URL,
+    "GET",
+    null,
+    token
+  );
+
+  useEffect(() => {
+    if (data) {
+      // console.log("All Subcategories", data);
+      setSubcategories(data.categories);
+    }
+    if (error) {
+      console.error("Error:", error);
+    }
+  }, [data, error]);
+
+  useEffect(() => {
+    setCategories((prevCategories) =>
+      prevCategories.map((category) =>
+        category.name === "Household Cleaners"
+          ? { ...category, subcategories }
+          : category
+      )
+    );
+  }, [subcategories]);
 
   return (
     <>
@@ -170,7 +212,7 @@ const Header = () => {
             </li>
             <li>
               <Link
-                to="Groceries"
+                to="subcategory"
                 className="text-black text-base font-semibold hover:text-green-500 flex items-center"
                 onClick={handleMenuItemClick}
               >
@@ -208,10 +250,13 @@ const Header = () => {
       <div className="bg-green-900 text-white">
         <div className="flex items-center justify-between h-10 max-w-screen-xxl mx-auto px-4 md:px-12">
           <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
-            <p className="text-sm font-semibold text-amber-50 w-full h-full flex items-center justify-center">
+            <AllCategoryDropdown categories={categories} />
+
+            {/* <p className="text-sm font-semibold text-amber-50 w-full h-full flex items-center justify-center">
               <DehazeIcon className="mr-1" />
               All Category
             </p>
+            <Dropdown categories={categories} /> */}
           </div>
 
           <div className="hidden md:flex items-center text-base space-x-8">
@@ -227,7 +272,7 @@ const Header = () => {
                 </Link>
               </li>
               <li>
-                <Link to="Groceries" className="block hover:text-lime-200">
+                <Link to="subcategory" className="block hover:text-lime-200">
                   Supermarket
                 </Link>
               </li>
