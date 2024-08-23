@@ -29,12 +29,17 @@ const Groceries = () => {
   useEffect(() => {
     if (data) {
       console.log("All Subcategories", data);
-      setSubcategories(data.categories);
+      if(location.pathname === "/Groceries/category"){
+        setSubcategories(data.categories[location.state.index].sub_categories);
+      }
+      if(location.pathname === "/Groceries"){
+        setSubcategories(data.categories);
+      }
     }
     if (error) {
       console.error("Error:", error);
     }
-  }, [data, error]);
+  }, [location,data, error]);
 
   return (
     <>
@@ -90,7 +95,8 @@ const Groceries = () => {
               to={subcategory.sub_categories ?  "category" : "subcategory"}
               state={{
                 categoryName: subcategory.name,
-                isSubcategory: isSubcategory
+                isSubcategory: isSubcategory,
+                index : index
               }}
               onClick={() => {
                 if (subcategory.sub_categories) {
@@ -98,9 +104,9 @@ const Groceries = () => {
                   setIsSubcategory(true);
                 }
               }}
+              key={index}
             >
               <div
-                key={index}
                 className="bg-[#F2FFE6] max-w-[295px] max-h-[232px] w-full h-auto rounded-lg flex flex-col justify-between items-center p-4 shadow-custom"
               >
                 <p className="text-center font-bold text-sm text-md text-lg">
