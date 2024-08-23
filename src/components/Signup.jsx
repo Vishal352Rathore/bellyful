@@ -48,6 +48,7 @@ const Signup = ({ toggleForm }) => {
     dateOfBirth: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [countryCodes, setCountryCodes] = useState([]);
   const [nationalities, setNationalities] = useState([]); // New state for nationalities
   const [submitForm, setSubmitForm] = useState(false);
@@ -109,7 +110,11 @@ const Signup = ({ toggleForm }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitForm(true);
+    const validationErrors = validateForm();
+    setErrors(validationErrors); // Set errors state
+    if (Object.keys(validationErrors).length === 0) {
+      setSubmitForm(true); // Trigger the API call
+    }
   };
 
   useEffect(() => {
@@ -134,6 +139,31 @@ const Signup = ({ toggleForm }) => {
       setSubmitForm(false); // Also reset on error to stop repeated submissions
     }
   }, [data, error]);
+
+
+  const validateForm = () => {
+    const errors = {};
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?,./<>]).{6,}$/;
+
+    if (!formData.mobileNumber.trim() || !/^\d{10}$/.test(formData.mobileNumber)) {
+      errors.mobileNumber = 'Mobile number must be exactly 10 digits';
+    }
+
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Valid email is required';
+    }
+
+    if (!formData.password) {
+      errors.password = 'Password is required';
+    } else if (!passwordRegex.test(formData.password)) {
+      errors.password = 'Password must contain at least 6 characters, including 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character';
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+    return errors;
+  };
 
   return (
     <div className="flex flex-col items-center w-full ">
@@ -206,12 +236,10 @@ const Signup = ({ toggleForm }) => {
                         required
                         value={formData.mobileNumber}
                         onChange={handleInputChange}
-                      />
-                    
-                    </div>
-                
+                      />                    
+                    </div>   
+                    {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber}</p>}             
                   </div>
-
                   <InputField
                     id="email"
                     type="email"
@@ -222,7 +250,7 @@ const Signup = ({ toggleForm }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                   />
-                  {/* </div> */}
+                  {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                 </div>
                
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
@@ -236,6 +264,7 @@ const Signup = ({ toggleForm }) => {
                     value={formData.password}
                     onChange={handleInputChange}
                   />
+                  {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
                   <InputField
                     id="confirm-password"
                     type="password"
@@ -246,6 +275,7 @@ const Signup = ({ toggleForm }) => {
                     value={formData.confirmPassword} // Use the password field again for confirmation
                     onChange={handleInputChange}
                   />
+                   {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
                 </div>
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
                   <div className="flex flex-col md:w-[48%] w-full">

@@ -64,6 +64,7 @@ const Login = ({ toggleForm ,setModalOpen}) => {
                 name="email"
                 placeholder="Enter Your address"
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="flex flex-col mt-4 ">
@@ -77,6 +78,7 @@ const Login = ({ toggleForm ,setModalOpen}) => {
                 name="password"
                 placeholder="Enter Your Password"
                 onChange={handleChange}
+                required
               />
             </div>
             <div className="flex flex-col mt-6">
