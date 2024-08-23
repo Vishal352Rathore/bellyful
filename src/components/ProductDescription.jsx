@@ -27,29 +27,69 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
   
     useEffect(() => {
       if (data) {
-        // console.log("ProductDescription", data);
-        setProductDescription(data.products.Amazon);
+        console.log("ProductDescription", data);
+        setProductDescription(data.products);
+        setPostData(prevPostData => ({...prevPostData, name: ProductDescription.name}))
       }
       if (error) {
         console.error("Error:", error);
       }
     }, [data, error]);
 
+
+    const [addCart, setAddCart] = useState(false);
+    const [postData, setPostData] = useState({ userId: "", quantity: 1 ,name:"" });
+
+    const handleIncrement = () => {
+      setPostData(prevPostData => ({
+        ...prevPostData,
+        quantity: prevPostData.quantity + 1,
+      }));
+    };
+  
+    const handleDecrement = () => {
+      setPostData(prevPostData => ({
+        ...prevPostData,
+        quantity: prevPostData.quantity > 1 ? prevPostData.quantity - 1 : prevPostData.quantity,
+      }));
+    };
+  
+    const handleAddCart = (e) =>{
+      e.preventDefault();
+      setAddCart(true);
+    }
+
+    const { addCartData, addCartLoading, addCartError } = useApi(
+      addCart ?  process.env.REACT_APP_LOGININ_API_URL : null,
+      "POST",
+      addCart ? postData : null
+    );
+ 
+    useEffect(() => {
+      if (addCartData?.status) {
+        console.log("Cart Added successfully", addCartData);
+      }
+      if (addCartError) {
+        console.error("Error:", addCartError);
+      }
+    }, [addCartData, addCartError]);
+
+
   return (
     <>
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-8 lg:space-y-0 lg:space-x-4 p-4 mt-8">
         <div className="w-full lg:w-1/2 flex justify-center">
           <img
-            src={ProductDescription[0]?.image_path}
+            src={ProductDescription?.image_path}
             alt="water bottle"
             className="w-full max-w-md h-auto object-cover"
           />
         </div>
         <div className="w-full lg:w-1/2">
-          <p className="text-3xl font-extrabold">{ProductDescription[0]?.name}</p>
+          <p className="text-3xl font-extrabold">{ProductDescription?.name}</p>
           <div className="flex items-center pt-4">
             <p className="text-4xl font-medium font-black text-[#6CBD44]">
-              {ProductDescription[0]?.price}
+              {ProductDescription?.price}
             </p>
             {stars.map((isFilled, index) => (
               <svg
@@ -73,18 +113,18 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
           </div>
 
           <p className="text-sm font-normal text-gray-700 dark:text-gray-400 line-clamp-3 pt-4">
-           {ProductDescription[0]?.name}
+           {ProductDescription?.name}
           </p>
           <div className="flex flex-col lg:flex-row mt-8 space-y-4 lg:space-y-0 lg:space-x-12">
             <p className="h-9 w-full lg:w-[261px] rounded-full text-xl text-center border border-gray-400 flex items-center justify-center space-x-8">
-              <span className="text-[#6CBD44] text-4xl">-</span>
+              <span className="text-[#6CBD44] text-4xl" onClick={handleDecrement}>-</span>
               <span className="text-gray-500">|</span>
               <span>3</span>
               <span className="text-gray-500">|</span>
-              <span className="text-[#6CBD44] text-2xl">+</span>
+              <span className="text-[#6CBD44] text-2xl"  onClick={handleIncrement}>+</span>
             </p>
             <Link to="Cart" >
-              <button className="h-12 w-full lg:w-[261px] rounded-full bg-[#6CBD44] text-white">Add to Cart</button>
+              <button onClick={(e)=>handleAddCart(e)} className="h-12 w-full lg:w-[261px] rounded-full bg-[#6CBD44] text-white">Add to Cart</button>
             </Link>
           </div>
           <div className="mt-4">

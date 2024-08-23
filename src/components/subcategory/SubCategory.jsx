@@ -79,9 +79,9 @@ const SubCategory = () => {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 p-4 sm:p-6 lg:p-8">
         {products?.map((product, index) => (
-          <Link to="ProductDescription" state={{productName:product.name}}>
+          <Link to="ProductDescription" state={{productName:product.name}} key={index}>
             <div
-              key={index}
+              
               className="shadow-lg shadow-gray-400/50 p-4 rounded-lg flex flex-col items-center bg-white"
             >
               <img
