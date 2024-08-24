@@ -40,11 +40,11 @@ const Signup = ({ toggleForm }) => {
     firstName: "",
     lastName: "",
     mobileNumber: "",
-    countryCode: "91", // Default value for country code
+    countryCode: "+91",
     email: "",
     password: "",
     confirmPassword: "",
-    nationality: "",
+    nationality: "India",
     dateOfBirth: "",
   });
 
@@ -125,7 +125,7 @@ const Signup = ({ toggleForm }) => {
         firstName: "",
         lastName: "",
         mobileNumber: "",
-        countryCode: "91",
+        countryCode: "+91",
         email: "",
         password: "",
         confirmPassword: "",
@@ -156,7 +156,7 @@ const Signup = ({ toggleForm }) => {
     if (!formData.password) {
       errors.password = 'Password is required';
     } else if (!passwordRegex.test(formData.password)) {
-      errors.password = 'Password must contain at least 6 characters, including 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character';
+      errors.password = 'Must be 6+ chars, incl. uppercase, lowercase, digit, & special char';
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -213,20 +213,20 @@ const Signup = ({ toggleForm }) => {
                       {"Mobile Number"}
                     </label>
                     <div className="flex border rounded-lg border-[#E3E3E3]">
-                    <select
-                      id="country-code"
-                      name="countryCode"
-                      className="h-[30px] md:w-[25%]"
-                      value={formData.countryCode}
-                      onChange={handleCountryCodeChange}
-                      required
-                    >
-                      {countryCodes.map(({ name, code }, index) => (
-                        <option key={`${code}-${index}`} value={code}>
-                          {code}
-                        </option>
-                      ))}
-                    </select>
+                      <select
+                        id="country-code"
+                        name="countryCode"
+                        className="h-[30px] md:w-[25%]"
+                        value={formData.countryCode}
+                        onChange={handleCountryCodeChange}
+                        required
+                      >
+                        {countryCodes.map(({ name, code }, index) => (
+                          <option key={`${code}-${index}`} value={code}>
+                            {code}
+                          </option>
+                        ))}
+                      </select>
                       <input
                         id="mobile-number"
                         type="text"
@@ -236,9 +236,9 @@ const Signup = ({ toggleForm }) => {
                         required
                         value={formData.mobileNumber}
                         onChange={handleInputChange}
-                      />                    
-                    </div>   
-                    {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber}</p>}             
+                      />
+                    </div>
+                    {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber}</p>}
                   </div>
                   <InputField
                     id="email"
@@ -252,30 +252,30 @@ const Signup = ({ toggleForm }) => {
                   />
                   {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                 </div>
-               
+
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
-                  <InputField
-                    id="password"
-                    type="password"
-                    label="Password"
-                    name="password"
-                    placeholder="Enter Your Password"
-                    required
-                    value={formData.password}
-                    onChange={handleInputChange}
-                  />
-                  {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-                  <InputField
-                    id="confirm-password"
-                    type="password"
-                    label="Confirm Password"
-                    name="confirmPassword"
-                    placeholder="Confirm Your Password"
-                    required
-                    value={formData.confirmPassword} // Use the password field again for confirmation
-                    onChange={handleInputChange}
-                  />
-                   {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
+                <InputField
+                      id="password"
+                      type="password"
+                      label="Password"
+                      name="password"
+                      placeholder="Enter Your Password"
+                      required
+                      value={formData.password}
+                      onChange={handleInputChange}
+                    />
+                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+                    <InputField
+                      id="confirm-password"
+                      type="password"
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      placeholder="Confirm Your Password"
+                      required
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                    />
+                    {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
                 </div>
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
                   <div className="flex flex-col md:w-[48%] w-full">
