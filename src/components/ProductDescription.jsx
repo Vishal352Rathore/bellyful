@@ -1,79 +1,107 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import bottle from "../images/waterbottle.png";
 import amazon from "../images/amazon-logo.png";
 import carrefour from "../images/carrefour.png";
-import { Link ,useLocation} from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
 import useApi from "../Customhook/useApi";
-
 
 const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
   const stars = Array(totalStars)
     .fill(false)
     .map((_, index) => index < filledStars);
+    const navigate = useNavigate();
+  const location = useLocation();
+  const { productName } = location.state || {};
+  console.log("productName", productName);
+  const encodedProductName = encodeURIComponent(productName);
+  const [ProductDescription, setProductDescription] = useState({});
+  const [carrefourAmazonPrice, setCarrefourAmazonPrice] = useState({
+    amazonPrice: null,
+    carrefourPrice: null,
+  });
 
+  var token = localStorage.getItem("userToken");
+  var userId = localStorage.getItem("userId");
+  const { data, loading, error } = useApi(
+    `${process.env.REACT_APP_GET_PRODUCT_DESCRIPTION}?productName=${encodedProductName}`,
+    "GET",
+    null,
+    token
+  );
 
-    const location = useLocation();
-    const { productName } = location.state || {};
-    const [ProductDescription,setProductDescription] = useState({});
-
-
-    var token = localStorage.getItem("userToken");
-    const { data, loading, error } = useApi(
-      `${process.env.REACT_APP_GET_PRODUCT_DESCRIPTION}?productName=${productName}`,
-      "GET",
-      null,
-      token
-    );
-  
-    useEffect(() => {
-      if (data) {
-        console.log("ProductDescription", data);
-        setProductDescription(data.products);
-        setPostData(prevPostData => ({...prevPostData, name: ProductDescription.name}))
-      }
-      if (error) {
-        console.error("Error:", error);
-      }
-    }, [data, error]);
-
-
-    const [addCart, setAddCart] = useState(false);
-    const [postData, setPostData] = useState({ userId: "", quantity: 1 ,name:"" });
-
-    const handleIncrement = () => {
-      setPostData(prevPostData => ({
-        ...prevPostData,
-        quantity: prevPostData.quantity + 1,
+  useEffect(() => {
+    if (data) {
+      console.log("ProductDescription", data);
+      setProductDescription(
+        data.products.Amazon[0] || data.products.Carrefouruae[0]
+      );
+      setCarrefourAmazonPrice((previousState) => ({
+        previousState,
+        amazonPrice: data.products?.Amazon[0].price,
+        carrefourPrice: data.products?.Carrefouruae?.[0]?.price || "NA"
       }));
-    };
-  
-    const handleDecrement = () => {
-      setPostData(prevPostData => ({
+      setPostData((prevPostData) => ({
         ...prevPostData,
-        quantity: prevPostData.quantity > 1 ? prevPostData.quantity - 1 : prevPostData.quantity,
+        name:
+          data.products.Amazon[0].name || data.products.Carrefouruae[0].name,
       }));
-    };
-  
-    const handleAddCart = (e) =>{
-      e.preventDefault();
-      setAddCart(true);
     }
+    if (error) {
+      console.error("Error:", error);
+    }
+  }, [data, error]);
 
-    const { addCartData, addCartLoading, addCartError } = useApi(
-      addCart ?  process.env.REACT_APP_LOGININ_API_URL : null,
-      "POST",
-      addCart ? postData : null
-    );
- 
-    useEffect(() => {
-      if (addCartData?.status) {
-        console.log("Cart Added successfully", addCartData);
-      }
-      if (addCartError) {
-        console.error("Error:", addCartError);
-      }
-    }, [addCartData, addCartError]);
+  const [addCart, setAddCart] = useState(false);
+  const [postData, setPostData] = useState({
+    userId: userId,
+    quantity: 1,
+    name: "",
+  });
 
+  const handleIncrement = () => {
+    setPostData((prevPostData) => ({
+      ...prevPostData,
+      quantity: prevPostData.quantity + 1,
+    }));
+  };
+
+  const handleDecrement = () => {
+    setPostData((prevPostData) => ({
+      ...prevPostData,
+      quantity:
+        prevPostData.quantity > 1
+          ? prevPostData.quantity - 1
+          : prevPostData.quantity,
+    }));
+  };
+
+  const handleAddCart = (e) => {
+    e.preventDefault();
+    setAddCart(true);
+    console.log("setAddCart");
+    
+  };
+
+  const {
+    data: addCartData,
+    loading: addCartLoading,
+    error: addCartError,
+  } = useApi(
+    addCart ? process.env.REACT_APP_ADD_CART : null,
+    "POST",
+    addCart ? postData : null,
+    token
+  );
+
+  useEffect(() => {
+    if (addCartData?.status) {
+      console.log("Cart Added successfully", addCartData);
+      navigate('/cart');
+    }
+    if (addCartError) {
+      console.error("Error:", addCartError);
+    }
+  }, [addCartData, addCartError,navigate]);
 
   return (
     <>
@@ -113,32 +141,47 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
           </div>
 
           <p className="text-sm font-normal text-gray-700 dark:text-gray-400 line-clamp-3 pt-4">
-           {ProductDescription?.name}
+            {ProductDescription?.name}
           </p>
           <div className="flex flex-col lg:flex-row mt-8 space-y-4 lg:space-y-0 lg:space-x-12">
             <p className="h-9 w-full lg:w-[261px] rounded-full text-xl text-center border border-gray-400 flex items-center justify-center space-x-8">
-              <span className="text-[#6CBD44] text-4xl" onClick={handleDecrement}>-</span>
+              <span
+                className="text-[#6CBD44] text-4xl cursor-pointer"
+                onClick={handleDecrement}
+              >
+                -
+              </span>
               <span className="text-gray-500">|</span>
-              <span>3</span>
+              <span>{postData.quantity}</span>
               <span className="text-gray-500">|</span>
-              <span className="text-[#6CBD44] text-2xl"  onClick={handleIncrement}>+</span>
+              <span
+                className="text-[#6CBD44] text-2xl cursor-pointer"
+                onClick={handleIncrement}
+              >
+                +
+              </span>
             </p>
-            <Link to="Cart" >
-              <button onClick={(e)=>handleAddCart(e)} className="h-12 w-full lg:w-[261px] rounded-full bg-[#6CBD44] text-white">Add to Cart</button>
-            </Link>
+
+            <button
+              type="submit"
+              onClick={handleAddCart}
+              className="h-12 w-full lg:w-[261px] rounded-full bg-[#6CBD44] text-white"
+            >
+              Add to Cart
+            </button>
           </div>
           <div className="mt-4">
             <p className="font-bold text-md">Price Comparison</p>
             <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] bg-[#F4F4F4] text-black justify-between mt-4 text-wrap">
               <img src={carrefour} alt="" className="w-[35px] h-[29px] " />
               <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
-                $876
+                {carrefourAmazonPrice.carrefourPrice}
               </span>
             </p>
             <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] text-black justify-between mt-4">
               <img src={amazon} alt="" className="w-[50px] h-[25px] " />
               <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
-                $500
+                {carrefourAmazonPrice.amazonPrice}
               </span>
             </p>
           </div>

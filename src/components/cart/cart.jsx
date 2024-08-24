@@ -1,135 +1,132 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import cartLogo from "../../images/Cart_logo.png";
 import waterBottle from "../../images/water-bottle.png";
 import AddTwoToneIcon from "@mui/icons-material/AddTwoTone";
 import RemoveTwoToneIcon from "@mui/icons-material/RemoveTwoTone";
 import amazonShortLogo from "../../images/Amazon_short_logo.png";
 import carreFourLogo from "../../images/Carrefour_logo.png";
+import removeCartImage from "../../images/RemoveCart.png";
+import useApi from "../../Customhook/useApi";
 
-const cart = () => {
+const Cart = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [cartTotal, setCartTotal] = useState({});
+  const [removeCart,  setRemoveCart] = useState(false);
+  const [refetchCart, setRefetchCart] = useState(false);
+
+  var token = localStorage.getItem("userToken");
+  var userId = localStorage.getItem("userId");
+
+  const { data, loading, error } = useApi(
+    `${process.env.REACT_APP_GET_CART}?userId=${userId}`,
+    "GET",
+    null,
+    token
+  );
+
+  useEffect(() => {
+    if (data) {
+      console.log("All cart items", data);
+      setCartTotal(data.items);
+      setCartItems(data.items.items);
+    }
+    if (error) {
+      console.error("Error:", error);
+    }
+  }, [data, error,refetchCart]);
+
+  const [addCart, setAddCart] = useState(false);
+  const [postData, setPostData] = useState({
+    userId: userId,
+    quantity: 1,
+    name: "",
+  });
+
+  const [removeCartPostData, setRemoveCartPostData] = useState({
+    userId: userId,
+    productId: null
+  });
+
+  const handleIncrement = (name) => {
+    setPostData((prevPostData) => ({ ...prevPostData, quantity: 1 }));
+    setPostData((prevPostData) => ({ ...prevPostData, name: name }));
+    setAddCart(true);
+    console.log("handleIncrement");
+    // window.location.reload();
+  };
+
+  const handleDecrement = (name) => {
+    setPostData((prevPostData) => ({ ...prevPostData, quantity: -1 }));
+    setPostData((prevPostData) => ({ ...prevPostData, name: name }));
+    setAddCart(true);
+    console.log("handleDecrement");
+    // window.location.reload();
+  };
+
+  const {
+    data: addCartData,
+    loading: addCartLoading,
+    error: addCartError,
+  } = useApi(
+    addCart ? process.env.REACT_APP_ADD_CART : null,
+    "POST",
+    addCart ? postData : null,
+    token
+  );
+
+  useEffect(() => {
+    if (addCartData?.status) {
+      console.log("Cart updated successfully", addCartData);
+      setAddCart(false);
+      setRefetchCart(true); 
+    }
+    if (addCartError) {
+      console.error("Error:", addCartError);
+      setAddCart(false);
+    }
+  }, [addCartData, addCartError]);
+
+  const removeCartItem = (productId) =>{
+    setRemoveCart(true);
+    setRemoveCartPostData(prevState=>({...prevState,productId:productId}));
+    console.log("setRemoveCart");
+  }
+
+  const {
+    data: removeCartData,
+    loading: removeCartLoading,
+    error: removeCartError,
+  } = useApi(
+    removeCart ? process.env.REACT_APP_DELETE_CART_ITEMS : null,
+    "DELETE",
+    removeCart ? removeCartPostData : null,
+    token
+  );
+
+  useEffect(() => {
+    if (removeCartData?.status) {
+      console.log("Cart item deleted successfully", removeCartData);
+      setRemoveCart(false); // Reset removeCart flag
+      setRefetchCart(true); 
+    } else if (removeCartError) {
+      console.error("Error:", removeCartError);
+      setRemoveCart(false); // Reset removeCart flag on error
+    }
+  }, [removeCartData, removeCartError]);
+
+  useEffect(() => {
+    if (!loading && !error) {
+      setRefetchCart(false);
+    }
+  }, [loading, error]);
+
   return (
-    // <div className="cart px-40">
-    //   <div className="flex flex-col p-6">
-    //     <div className="flex gap-6 mt-14">
-    //       <div className="shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_4px_8px_rgba(0,0,0,0.2)] p-4 rounded-2xl px-14 py-6  flex flex-col items-center justify-center">
-    //         <img
-    //           src={waterBottle}
-    //           alt="waterBottle"
-    //           className="w-[59px] h-[59px] mb-4"
-    //         />
-    //         <div className="flex justify-center items-center gap-3">
-    //           <p className="text-black font-semibold">
-    //             <RemoveTwoToneIcon />
-    //           </p>
-    //           <p className="text-black font-semibold">3</p>
-    //           <p className="text-black font-semibold">
-    //             <AddTwoToneIcon />
-    //           </p>
-    //         </div>
-    //       </div>
-
-    //       <div className=" shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_4px_8px_rgba(0,0,0,0.2)]  p-4 px-20 py-8 rounded-2xl flex flex-col justify-evenly gap-6 bg-[#F1FFE3]">
-    //         <div className="flex flex-col items-center w-full">
-    //           <p className="text-[24px] text-gray-800 font-medium">AED</p>
-    //           <p className="text-[40px] text-[#6CBD44] font-bold">500</p>
-    //           <p className="text-gray-600">5 liter</p>
-    //         </div>
-    //       </div>
-
-    //       <div className="shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_4px_8px_rgba(0,0,0,0.2)] p-4 px-20 py-8 rounded-2xl flex flex-col justify-evenly gap-6 bg-[#FFFFFF]">
-    //         <div className=" flex flex-col items-center w-full">
-    //           <p className="text-[24px] text-gray-800 font-medium">AED</p>
-    //           <p className="text-[40px] text-[#6CBD44] font-bold">500</p>
-    //           <p className="text-gray-600">5 liter</p>
-    //         </div>
-    //       </div>
-    //     </div>
-
-    //     <div className="flex gap-6 mt-14">
-    //       <div className="shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_4px_8px_rgba(0,0,0,0.2)] p-4 rounded-2xl px-14 py-6  flex flex-col items-center justify-center">
-    //         <img
-    //           src={waterBottle}
-    //           alt="waterBottle"
-    //           className="w-[59px] h-[59px] mb-4"
-    //         />
-    //         <div className="flex justify-center items-center gap-3">
-    //           <p className="text-black font-semibold">
-    //             <RemoveTwoToneIcon />
-    //           </p>
-    //           <p className="text-black font-semibold">3</p>
-    //           <p className="text-black font-semibold">
-    //             <AddTwoToneIcon />
-    //           </p>
-    //         </div>
-    //       </div>
-
-    //       <div className=" shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_4px_8px_rgba(0,0,0,0.2)]  p-4 px-20 py-8 rounded-2xl flex flex-col justify-evenly gap-6 bg-[#F1FFE3]">
-    //         <div className="flex flex-col items-center w-full">
-    //           <p className="text-[24px] text-gray-800 font-medium">AED</p>
-    //           <p className="text-[40px] text-[#6CBD44] font-bold">500</p>
-    //           <p className="text-gray-600">5 liter</p>
-    //         </div>
-    //       </div>
-
-    //       <div className="shadow-[4px_4px_8px_rgba(0,0,0,0.2),-4px_4px_8px_rgba(0,0,0,0.2)] p-4 px-20 py-8 rounded-2xl flex flex-col justify-evenly gap-6 bg-[#FFFFFF]">
-    //         <div className=" flex flex-col items-center w-full">
-    //           <p className="text-[24px] text-gray-800 font-medium">AED</p>
-    //           <p className="text-[40px] text-[#6CBD44] font-bold">500</p>
-    //           <p className="text-gray-600">5 liter</p>
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div></div>
-    //   </div>
-    //   <div className="flex gap-6 p-6 mt-28">
-    //     <div className="flex flex-col items-center gap-6">
-    //       <div className=" px-16 py-12 rounded-2xl flex flex-col items-center justify-center w-full">
-    //         <div className="w-[63px] h-[63px]">
-    //           <img
-    //             src={cartLogo}
-    //             alt="cartLogo"
-    //             className="w-full h-full mb-4"
-    //           />
-    //         </div>
-    //         <span className="text-[48] font-bold">Total</span>
-    //       </div>
-    //     </div>
-
-    //     <div className=" shadow-lg shadow-gray-400/50 px-8 py-6 rounded-2xl flex flex-col  gap-6 bg-[#F1FFE3]">
-    //       <div className="flex flex-col items-center w-full">
-    //         <p className="text-[24px] text-gray-800 font-medium">AED</p>
-    //         <p className="text-[40px] text-[#6CBD44] font-bold">1000</p>
-    //         <button className="w-full bg-[#6CBD44]  px-8 rounded-full text-white text-[24px] font-medium">
-    //           Checkout
-    //         </button>
-    //       </div>
-    //     </div>
-
-    //     <div className="shadow-lg shadow-gray-400/50 px-8 py-6 rounded-2xl flex flex-col gap-6 bg-[#FFFFFF]">
-    //       <div className=" flex flex-col items-center w-full">
-    //         <p className="text-[24px] text-gray-800 font-medium">AED</p>
-    //         <p className="text-[40px] text-[#6CBD44] font-bold">1000</p>
-    //         <button className="w-full bg-[#6CBD44]  px-8 rounded-full text-white text-[24px] font-medium">
-    //           Checkout
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
     <div className="cart px-4 lg:px-40">
       <div className="flex flex-col p-6">
         {/* First Row */}
         <div className="flex gap-6 mt-8 md:mt-14">
           {/* Product Section */}
           <div className="p-4 flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3"></div>
-
-          <div className=" p-4 flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3">
-            <img
-              src={carreFourLogo}
-              alt="carreFourLogo"
-              className="w-[50px] h-[50px] md:w-[59px] md:h-[59px] mb-4"
-            />
-          </div>
           <div className=" p-4 flex flex-col items-center justify-center w-full md:w-1/6 md:w-1/3">
             <img
               src={amazonShortLogo}
@@ -137,90 +134,70 @@ const cart = () => {
               className="w-[50px] h-[50px] md:w-[59px] md:h-[59px] mb-4"
             />
           </div>
+          <div className=" p-4 flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3">
+            <img
+              src={carreFourLogo}
+              alt="carreFourLogo"
+              className="w-[50px] h-[50px] md:w-[59px] md:h-[59px] mb-4"
+            />
+          </div>
         </div>
 
-        <div className="flex gap-6 mt-8 md:mt-14">
-          {/* Product Section */}
-          <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3">
-            <img
-              src={waterBottle}
-              alt="waterBottle"
-              className="w-[50px] h-[50px] md:w-[109px] md:h-[109px] mb-2"
-            />
-            <div className="flex justify-center items-center gap-3">
-              <button className="text-black font-semibold">
-                <RemoveTwoToneIcon />
-              </button>
-              <p className="text-black font-semibold">3</p>
-              <button className="text-black font-semibold">
-                <AddTwoToneIcon />
-              </button>
-            </div>
-          </div>
+        {cartItems?.map((items, index) => (
+          <div className="flex gap-6 mt-8 md:mt-14" key={index}>
+            {/* Product Section */}
+            <div className="relative shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center w-full md:w-1/6 sm:w-1/3">
+              <span className="absolute -top-3 -left-3 cursor-pointer" onClick={()=>removeCartItem(items.productId)}>
+                <img src={removeCartImage} alt="removeCart" />
+              </span>
 
-          <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-[#F1FFE3] w-full md:w-1/6 sm:w-1/3">
-            <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-none">
-              AED
-            </p>
-            <p className="text-[28px] md:text-[40px] text-[#6CBD44] font-bold leading-none">
-              200
-            </p>
-            <p className="text-gray-600 text-[14px] md:text-[16px] leading-none">
-              5 liter
-            </p>
-          </div>
-          <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-white  w-full md:w-1/6 sm:w-1/3">
-            <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-none">
-              AED
-            </p>
-            <p className="text-[28px] md:text-[40px] text-[#6CBD44] font-bold leading-none">
-              300
-            </p>
-            <p className="text-gray-600 text-[14px] md:text-[16px] leading-none">
-              5 liter
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-6 mt-8 md:mt-14">
-          <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center w-full md:w-1/6">
-            <img
-              src={waterBottle}
-              alt="waterBottle"
-              className="w-[50px] h-[50px] md:w-[109px] md:h-[109px] mb-2"
-            />
-            <div className="flex justify-center items-center gap-3">
-              <button className="text-black font-semibold">
-                <RemoveTwoToneIcon />
-              </button>
-              <p className="text-black font-semibold">3</p>
-              <button className="text-black font-semibold">
-                <AddTwoToneIcon />
-              </button>
+              <img
+                src={waterBottle}
+                alt="waterBottle"
+                className="w-[50px] h-[50px] md:w-[109px] md:h-[109px] mb-2"
+              />
+              <div className="flex justify-center items-center gap-3">
+                <button
+                  className="text-black font-semibold"
+                  onClick={() => handleDecrement(items.name)}
+                >
+                  <RemoveTwoToneIcon />
+                </button>
+                <p className="text-black font-semibold">{items?.quantity}</p>
+                <button
+                  className="text-black font-semibold"
+                  onClick={() => handleIncrement(items.name)}
+                >
+                  <AddTwoToneIcon />
+                </button>
+              </div>
+            </div>
+
+            <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-[#F1FFE3] w-full md:w-1/6 sm:w-1/3">
+              <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-none">
+                AED
+              </p>
+              <p className="text-[28px] md:text-[40px] text-[#6CBD44] font-bold leading-none">
+                {items?.amazonPrice}
+              </p>
+              <p className="text-gray-600 text-[14px] md:text-[16px] leading-none">
+                5 liter
+              </p>
+            </div>
+            <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-white  w-full md:w-1/6 sm:w-1/3">
+              <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-none">
+                AED
+              </p>
+              <p className="text-[28px] md:text-[40px] text-[#6CBD44] font-bold leading-none">
+                {items?.carrefourPrice || "NA"}
+              </p>
+              <p className="text-gray-600 text-[14px] md:text-[16px] leading-none">
+                5 liter
+              </p>
             </div>
           </div>
-          <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center  bg-[#F1FFE3] w-full md:w-1/6">
-            <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-none">
-              AED
-            </p>
-            <p className="text-[28px] md:text-[40px] text-[#6CBD44] font-bold leading-none">
-              210
-            </p>
-            <p className="text-gray-600 text-[14px] md:text-[16px] leading-none">
-              5 liter
-            </p>
-          </div>
-          <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center  bg-white w-full md:w-1/6">
-            <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-none">
-              AED
-            </p>
-            <p className="text-[24px] md:text-[40px] text-[#6CBD44] font-bold leading-none">
-              350
-            </p>
-            <p className="text-gray-600 text-[14px] md:text-[16px] leading-none">
-              5 liter
-            </p>
-          </div>
-        </div>
+        ))}
+
       </div>
       {/* Total and Checkout Section */}
       <div className="flex gap-6 p-6 mt-16 md:mt-28">
@@ -244,7 +221,7 @@ const cart = () => {
             AED
           </p>
           <p className="text-[24px] sm:text-[32px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
-            410
+            {cartTotal?.amazonSubTotal}
           </p>
           <button className="w-full bg-[#6CBD44]  sm:px-8 sm:py-2 md:px-8 md:py-2 rounded-full text-white text-[10px] sm:text-[20px] md:text-[24px] font-medium">
             Checkout
@@ -256,7 +233,7 @@ const cart = () => {
             AED
           </p>
           <p className="text-[24px] sm:text-[32px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
-            650
+            {cartTotal?.carrefourSubTotal}
           </p>
           <button className="w-full bg-[#6CBD44] sm:px-8 sm:py-2 md:px-8 md:py-2 rounded-full text-white text-[10px] sm:text-[20px] md:text-[24px] font-medium">
             Checkout
@@ -269,4 +246,4 @@ const cart = () => {
 
 // Test comment 3
 
-export default cart;
+export default Cart;

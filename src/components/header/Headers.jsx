@@ -79,6 +79,13 @@ const Header = () => {
     };
   }, [isModalOpen]);
 
+
+  const handleLogout = () =>{
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userId");
+    window.location.reload();
+  }
+
   return (
     <>
       {/* Main Header */}
@@ -159,15 +166,15 @@ const Header = () => {
                   How it Works
                 </a>
               </li>
-              {/* <li className="flex items-center space-x-1">
+              <li className="flex items-center space-x-1">
                 <button
-                  onClick={openModal}
+                  onClick={()=>handleLogout()}
                   className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500 flex items-center"
                 >
                   <PermIdentityIcon className="mr-1" />
-                  LogIn
+                  Log Out
                 </button>
-              </li> */}
+              </li>
             </ul>
           </div>
         </div>

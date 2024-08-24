@@ -30,7 +30,8 @@ const Login = ({ toggleForm ,setModalOpen}) => {
   useEffect(() => {
     if (data?.status) {
       console.log("Login successful:", data);
-      localStorage.setItem("userToken",data.items);
+      localStorage.setItem("userToken",data.items.token);
+      localStorage.setItem("userId",data.items.userId)
       setModalOpen(false);
     }
     if (error) {

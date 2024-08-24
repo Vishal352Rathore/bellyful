@@ -22,7 +22,7 @@ const SubCategory = () => {
   var token = localStorage.getItem("userToken");
 
   const { data, loading, error } = useApi(
-    isSubcategory ? `${process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY}?sub_category_name=${categoryName}&page=${1}` :
+    location.pathname === "/Groceries/category/subcategory" ? `${process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY}?sub_category_name=${categoryName}&page=${1}` :
      `${process.env.REACT_APP_GET_PRODUCT_BY_CATEGORY}?category_name=${categoryName}&page=${1}` ,
     "GET",
     null,
