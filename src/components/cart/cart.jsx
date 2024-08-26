@@ -61,7 +61,7 @@ const Cart = () => {
     setAddCart(true);
     console.log("handleDecrement");
     // window.location.reload();
-  };
+  };  
 
   const {
     data: addCartData,
@@ -243,7 +243,5 @@ const Cart = () => {
     </div>
   );
 };
-
-// Test comment 3
 
 export default Cart;

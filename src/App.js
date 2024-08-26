@@ -31,6 +31,7 @@ function App() {
             <Route path="Groceries/subcategory" element={<SubCategory/>} />
             <Route path="Groceries/category/subcategory/ProductDescription" element={<ProductDescription/>} />
             <Route path="Groceries/subcategory/ProductDescription" element={<ProductDescription/>} />
+            <Route path="subcategory/ProductDescription" element={<ProductDescription/>} />
             <Route path="Cart" element={<Cart />} />
             <Route path="Groceries/category/subcategory/ProductDescription/Cart" element={<Cart />} />
             <Route path="Groceries/subcategory/ProductDescription/Cart" element={<Cart />} />

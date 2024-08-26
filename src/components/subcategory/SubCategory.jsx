@@ -8,6 +8,7 @@ import useApi from "../../Customhook/useApi";
 const SubCategory = () => {
 
   const location = useLocation();
+  console.log("location",location);
   const { categoryName ,isSubcategory } = location.state || {};
 
   const [currentPage, setCurrentPage] = useState("Colddriks");
@@ -22,7 +23,7 @@ const SubCategory = () => {
   var token = localStorage.getItem("userToken");
 
   const { data, loading, error } = useApi(
-    location.pathname === "/Groceries/category/subcategory" ? `${process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY}?sub_category_name=${categoryName}&page=${1}` :
+    location.pathname === "/Groceries/category/subcategory" || location.state.isSubcategory ? `${process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY}?sub_category_name=${categoryName}&page=${1}` :
      `${process.env.REACT_APP_GET_PRODUCT_BY_CATEGORY}?category_name=${categoryName}&page=${1}` ,
     "GET",
     null,

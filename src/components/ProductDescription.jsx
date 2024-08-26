@@ -106,14 +106,15 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
   return (
     <>
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between space-y-8 lg:space-y-0 lg:space-x-4 p-4 mt-8">
-        <div className="w-full lg:w-1/2 flex justify-center">
+       <div className="grid lg:grid-cols-5 gap-4">
+        <div className="w-[314px] h-[314px] col-span-2 lg:w-1/2 flex justify-center items-center">
           <img
             src={ProductDescription?.image_path}
             alt="water bottle"
-            className="w-full max-w-md h-auto object-cover"
+            className=" max-w-md object-cover"
           />
         </div>
-        <div className="w-full lg:w-1/2">
+        <div className="col-span-3 w-full lg:w-1/2">
           <p className="text-3xl font-extrabold">{ProductDescription?.name}</p>
           <div className="flex items-center pt-4">
             <p className="text-4xl font-medium font-black text-[#6CBD44]">
@@ -186,24 +187,24 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
             </p>
           </div>
         </div>
+        </div>
       </div>
       <div className="w-full p-4 lg:p-20">
-        <a
-          href="#"
-          className="block p-4 bg-white border border-gray-200 rounded-lg shadow-md"
-        >
           <h5 className="text-2xl font-bold tracking-tight text-gray-900">
             Description
           </h5>
           <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
-          <p className="font-normal line-clamp-3">
-            People start migrating from conventional to organic products because
+          
+            {ProductDescription?.description?.map((item, index)=>(
+             <p className="font-normal line-clamp-3">{item} </p>
+            ))}
+            {/* People start migrating from conventional to organic products because
             of their health benefits. Comparing chemically treated food versus
             organic food reveals that the latter is more nutrient-dense. The
             distinction between natural and organic food is well discernible. A
             path of goodness extends from healthy soil to healthy humans in the
-            end.
-          </p>
+            end. */}
+         
           <h5 className="font-bold mt-4">Overview :</h5>
           <p>
             Organic farming helps avoid the use of chemical additives or
@@ -235,7 +236,7 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
             carbon dioxide emissions and slow down the effects of climate
             change.
           </p>
-        </a>
+   
       </div>
     </>
   );
