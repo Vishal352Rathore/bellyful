@@ -39,11 +39,11 @@ const Homepage = () => {
       </div>
 
       <div className="relative h-auto w-full p-5 md:p-10">
-        <div className="flex flex-col md:flex-row justify-between items-center py-8 px-8 md:py-12 md:px-12">
+        <div className="flex flex-col md:flex-row justify-between items-center py-4 px-8 md:py-8 md:px-12">
           <p className="text-2xl md:text-3xl text-black font-semibold">
             Shop by Store
           </p>
-          <div className="relative mt-5 md:mt-0">
+          <div className="relative mt-2 md:mt-0">
             <input
               type="search"
               placeholder="Academic City"

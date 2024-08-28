@@ -10,6 +10,7 @@ import useApi from "../Customhook/useApi";
 const Login = ({ toggleForm ,setModalOpen}) => {
   const [postData, setPostData] = useState({ email: "", password: "" });
   const [triggerApiCall, setTriggerApiCall] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const { data, loading, error } = useApi(
     triggerApiCall ?  process.env.REACT_APP_LOGININ_API_URL : null,
@@ -24,8 +25,12 @@ const Login = ({ toggleForm ,setModalOpen}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTriggerApiCall(true);
-  };
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      setTriggerApiCall(true); // Trigger the API call
+    }
+  }; 
 
   useEffect(() => {
     if (data?.status) {
@@ -38,6 +43,22 @@ const Login = ({ toggleForm ,setModalOpen}) => {
       console.error("Error:", error);
     }
   }, [data, error]);
+
+  const validateForm = () => {
+    const errors = {};
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?,./<>]).{6,}$/;
+
+    if (!postData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)) {
+      errors.email = 'Valid email is required';
+    }
+
+    if (!postData.password) {
+      errors.password = 'Password is required';
+    } else if (!passwordRegex.test(postData.password)) {
+      errors.Password = 'Must be 6+ chars, incl. uppercase, lowercase, digit, & special char';
+    }
+    return errors;
+  };
 
   return (
     <div className="flex h-full w-full items-center justify-center md:p-0">
@@ -61,12 +82,13 @@ const Login = ({ toggleForm ,setModalOpen}) => {
               <input
                 id="email"
                 type="text"
-                className="h-8 w-[407px] px-4 border rounded-lg border-gray-300"
+                className="h-8  px-4 border rounded-lg border-gray-300"
                 name="email"
                 placeholder="Enter Your address"
                 onChange={handleChange}
                 required
               />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
             <div className="flex flex-col mt-4 ">
               <label className="text-black font-bold text-sm md:text-base">
@@ -75,17 +97,18 @@ const Login = ({ toggleForm ,setModalOpen}) => {
               <input
                 id="password"
                 type="password"
-                className="h-8 w-[407px] px-4 border rounded-lg border-gray-300"
+                className="h-8  px-4 border rounded-lg border-gray-300"
                 name="password"
                 placeholder="Enter Your Password"
                 onChange={handleChange}
                 required
               />
+             {errors.Password && <p className="text-red-500 text-xs mt-1">{errors.Password}</p>}
             </div>
             <div className="flex flex-col mt-6">
               <button
                 type="submit"
-                className="h-8 w-[407px] bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg"
+                className="h-8 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg"
                 onSubmit={handleSubmit}
               >
                 Login

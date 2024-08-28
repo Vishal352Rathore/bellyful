@@ -80,11 +80,21 @@ const Header = () => {
   }, [isModalOpen]);
 
 
-  const handleLogout = () =>{
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("userId");
-    window.location.reload();
-  }
+  // const handleLogout = () =>{
+  //   localStorage.removeItem("userToken");
+  //   localStorage.removeItem("userId");
+  //   window.location.reload();
+  // }
+
+  const handleLogout = () => {
+    const userConfirmed = window.confirm("Are you sure you want to log out?");
+    if (userConfirmed) {
+      localStorage.removeItem("userToken");
+      localStorage.removeItem("userId");
+      window.location.reload();
+    }
+  };
+  
 
   return (
     <>
@@ -237,7 +247,7 @@ const Header = () => {
                 FAQ
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 to="subcategory"
                 className="text-black text-base font-semibold hover:text-green-500 flex items-center"
@@ -245,7 +255,7 @@ const Header = () => {
               >
                 Supermarket
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link
                 to="Cart"
@@ -256,6 +266,15 @@ const Header = () => {
                 Cart
               </Link>
             </li>
+            <li className="flex items-center space-x-1">
+                <button
+                  onClick={()=>handleLogout()}
+                  className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500 flex items-center"
+                >
+                  <PermIdentityIcon className="mr-1" />
+                  Log Out
+                </button>
+              </li>
             {/* <li>
               <button
                 onClick={() => {
@@ -298,11 +317,11 @@ const Header = () => {
                   FAQ
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="subcategory" className="block hover:text-lime-200">
                   Supermarket
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

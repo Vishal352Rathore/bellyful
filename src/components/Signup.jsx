@@ -164,7 +164,6 @@ const Signup = ({ toggleForm }) => {
     }
     return errors;
   };
-
   return (
     <div className="flex flex-col items-center w-full ">
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-y-scroll md:overflow-hidden">

@@ -1,15 +1,13 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import subCategoryBannerBg from "../../images/sub-category-banner-bg.png";
 import subCategoryBanner from "../../images/sub-category-banner.png";
-import waterBottle from "../../images/water-bottle.png";
-import { Link ,useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useApi from "../../Customhook/useApi";
 
 const SubCategory = () => {
-
   const location = useLocation();
-  console.log("location",location);
-  const { categoryName ,isSubcategory } = location.state || {};
+  console.log("location", location);
+  const { categoryName, isSubcategory } = location.state || {};
 
   const [currentPage, setCurrentPage] = useState("Colddriks");
 
@@ -23,8 +21,14 @@ const SubCategory = () => {
   var token = localStorage.getItem("userToken");
 
   const { data, loading, error } = useApi(
-    location.pathname === "/Groceries/category/subcategory" || location.state.isSubcategory ? `${process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY}?sub_category_name=${categoryName}&page=${1}` :
-     `${process.env.REACT_APP_GET_PRODUCT_BY_CATEGORY}?category_name=${categoryName}&page=${1}` ,
+    location.pathname === "/Groceries/category/subcategory" ||
+      location.state.isSubcategory
+      ? `${
+          process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY
+        }?sub_category_name=${categoryName}&page=${1}`
+      : `${
+          process.env.REACT_APP_GET_PRODUCT_BY_CATEGORY
+        }?category_name=${categoryName}&page=${1}`,
     "GET",
     null,
     token
@@ -39,7 +43,6 @@ const SubCategory = () => {
       console.error("Error:", error);
     }
   }, [data, error]);
-
 
   return (
     <div className="overflow-x-hidden">
@@ -58,7 +61,7 @@ const SubCategory = () => {
         </div>
       </div>
 
-      <nav className="p-4 sm:p-6 lg:p-10">
+      {/* <nav className="p-4 sm:p-6 lg:p-10">
         <ul className="flex flex-wrap gap-2 justify-center sm:justify-start mx-2 sm:mx-4 lg:mx-6 text-sm sm:text-base">
           {["Colddriks", "Milk Products", "Water", "Coffee", "Tea"].map(
             (tab) => (
@@ -76,32 +79,38 @@ const SubCategory = () => {
             )
           )}
         </ul>
-      </nav>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 p-4 sm:p-6 lg:p-8">
-        {products?.map((product, index) => (
-          <Link to="ProductDescription" state={{productName:product.name}} key={index}>
-            <div
-              
-              className="shadow-lg shadow-gray-400/50 p-4 rounded-lg flex flex-col items-center bg-white"
-            >
+      </nav> */}
+    
+    <div className="flex justify-center p-4 sm:p-4 md:mx-10 sm:mx-4 md:p-4 mt-10 md:mt-20">
+        <div
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full"
+          style={{ gap: "30px" }}
+        >
+        {products?.length>0 ? products?.map((product, index) => (
+          <Link
+            to="ProductDescription"
+            state={{ productName: product.name }}
+            key={index}
+          >
+            <div className="shadow-lg shadow-gray-400/50  w-full p-4  rounded-lg flex flex-col justify-center items-center bg-white h-[225px]">
               <img
-                src={waterBottle}
-                alt="waterBottle"
-                className="w-[100px] sm:w-[120px] md:w-[140px] lg:w-[160px] h-auto mb-4"
+                src={product.image_path}
+                alt={product.name}
+                className="w-[85px] h-[100px] sm:w-[100px] sm:h[120px] md:w-[140px] lg:w-[100px]  object-fit mb-4"
               />
               <div className="flex flex-col items-start text-left sm:text-left w-full">
                 <p className="text-green-600 font-semibold text-sm sm:text-base">
                   {product.price}
                 </p>
-                <p className="text-gray-800 font-medium mt-2 text-sm sm:text-base">
-                  {product.brand_name}
+                <p className="text-gray-800  mt-2 text-sm sm:text-base line-clamp-2">
+                  {product.name}
                 </p>
                 <p className="text-gray-600 text-sm sm:text-base"></p>
               </div>
             </div>
           </Link>
-        ))}
+        )) : <p>No Product Available</p>}
+        </div>
       </div>
     </div>
   );

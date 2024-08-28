@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DehazeIcon from "@mui/icons-material/Dehaze";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Link } from "react-router-dom"; // Import the icon
+import { Link } from "react-router-dom";
 
 const AllCategoryDropdown = ({ categories }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -84,6 +84,7 @@ const AllCategoryDropdown = ({ categories }) => {
                             isSubcategory: false,
                             index: subIndex,
                           }}
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <span>{subcategory.name}</span>
                         </Link>
@@ -106,6 +107,7 @@ const AllCategoryDropdown = ({ categories }) => {
                                         isSubcategory: true,
                                         index: subIndex,
                                       }}
+                                      onClick={(e) => e.stopPropagation()}
                                     >
                                       <span> {subSubcategory.name} </span>
                                     </Link>
