@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../images/image 1.png";
 import closeup from "../images/close-up.png";
 import google from "../images/google.png";
@@ -6,14 +6,20 @@ import facebook from "../images/facebook.png";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import useApi from "../Customhook/useApi";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const Login = ({ toggleForm ,setModalOpen}) => {
+const Login = ({ toggleForm, setModalOpen }) => {
   const [postData, setPostData] = useState({ email: "", password: "" });
   const [triggerApiCall, setTriggerApiCall] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevState) => !prevState);
+  };
 
   const { data, loading, error } = useApi(
-    triggerApiCall ?  process.env.REACT_APP_LOGININ_API_URL : null,
+    triggerApiCall ? process.env.REACT_APP_LOGININ_API_URL : null,
     "POST",
     triggerApiCall ? postData : null
   );
@@ -30,13 +36,14 @@ const Login = ({ toggleForm ,setModalOpen}) => {
     if (Object.keys(validationErrors).length === 0) {
       setTriggerApiCall(true); // Trigger the API call
     }
-  }; 
+  };
 
   useEffect(() => {
     if (data?.status) {
       console.log("Login successful:", data);
-      localStorage.setItem("userToken",data.items.token);
-      localStorage.setItem("userId",data.items.userId)
+      localStorage.setItem("userToken", data.items.token);
+      localStorage.setItem("userId", data.items.userId);
+      alert("Login Succesfully")
       setModalOpen(false);
     }
     if (error) {
@@ -46,16 +53,19 @@ const Login = ({ toggleForm ,setModalOpen}) => {
 
   const validateForm = () => {
     const errors = {};
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?,./<>]).{6,}$/;
-
-    if (!postData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)) {
-      errors.email = 'Valid email is required';
+    const passwordRegex = /^.{6,10}$/;
+    if (
+      !postData.email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
+    ) {
+      errors.email = "Valid email is required";
     }
 
     if (!postData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (!passwordRegex.test(postData.password)) {
-      errors.Password = 'Must be 6+ chars, incl. uppercase, lowercase, digit, & special char';
+      errors.Password =
+        "Must between 6 to 10 chars";
     }
     return errors;
   };
@@ -88,22 +98,32 @@ const Login = ({ toggleForm ,setModalOpen}) => {
                 onChange={handleChange}
                 required
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
             </div>
-            <div className="flex flex-col mt-4 ">
+            <div className="flex flex-col mt-4 relative">
               <label className="text-black font-bold text-sm md:text-base">
                 Password:
               </label>
               <input
                 id="password"
-                type="password"
-                className="h-8  px-4 border rounded-lg border-gray-300"
+                type={isPasswordVisible ? "text" : "password"}
+                className="h-8 px-4 border rounded-lg border-gray-300 w-full pr-10" // Add some padding to the right for the icon
                 name="password"
                 placeholder="Enter Your Password"
                 onChange={handleChange}
                 required
               />
-             {errors.Password && <p className="text-red-500 text-xs mt-1">{errors.Password}</p>}
+              <span
+                className="absolute right-2 top-9 sm:top-10 transform -translate-y-1/2 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+              </span>
+              {errors.Password && (
+                <p className="text-red-500 text-xs mt-1">{errors.Password}</p>
+              )}
             </div>
             <div className="flex flex-col mt-6">
               <button

@@ -130,3 +130,5 @@ const AllCategoryDropdown = ({ categories }) => {
 };
 
 export default AllCategoryDropdown;
+
+

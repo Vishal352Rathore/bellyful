@@ -6,6 +6,7 @@ import google from "../images/google.png";
 import facebook from "../images/facebook.png";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Reusable Input Component
 const InputField = ({
@@ -40,11 +41,11 @@ const Signup = ({ toggleForm }) => {
     firstName: "",
     lastName: "",
     mobileNumber: "",
-    countryCode: "+91",
+    countryCode: "+971",
     email: "",
     password: "",
     confirmPassword: "",
-    nationality: "India",
+    nationality: "United Arab Emirates",
     dateOfBirth: "",
   });
 
@@ -57,6 +58,15 @@ const Signup = ({ toggleForm }) => {
     "POST",
     submitForm ? formData : null
   );
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevState) => !prevState);
+  };
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible((prevState) => !prevState);
+  };
 
   useEffect(() => {
     if (data?.status) {
@@ -125,11 +135,11 @@ const Signup = ({ toggleForm }) => {
         firstName: "",
         lastName: "",
         mobileNumber: "",
-        countryCode: "+91",
+        countryCode: "+971",
         email: "",
         password: "",
         confirmPassword: "",
-        nationality: "",
+        nationality: "United Arab Emirates",
         dateOfBirth: "",
       });
       setSubmitForm(false); // Reset to prevent infinite loop
@@ -140,27 +150,34 @@ const Signup = ({ toggleForm }) => {
     }
   }, [data, error]);
 
-
   const validateForm = () => {
     const errors = {};
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+~`|}{[\]:;?,./<>]).{6,}$/;
+    const passwordRegex =
+      /^.{6,10}$/;
 
-    if (!formData.mobileNumber.trim() || !/^\d{10}$/.test(formData.mobileNumber)) {
-      errors.mobileNumber = 'Mobile number must be exactly 10 digits';
+    if (
+      !formData.mobileNumber.trim() ||
+      !/^\d{10}$/.test(formData.mobileNumber)
+    ) {
+      errors.mobileNumber = "Mobile number must be exactly 10 digits";
     }
 
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Valid email is required';
+    if (
+      !formData.email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    ) {
+      errors.email = "Valid email is required";
     }
 
     if (!formData.password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (!passwordRegex.test(formData.password)) {
-      errors.password = 'Must be 6+ chars, incl. uppercase, lowercase, digit, & special char';
+      errors.password =
+        "Must between 6 to 10 chars";
     }
 
     if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = 'Passwords do not match';
+      errors.confirmPassword = "Passwords do not match";
     }
     return errors;
   };
@@ -169,7 +186,7 @@ const Signup = ({ toggleForm }) => {
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-y-scroll md:overflow-hidden">
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8">
           <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-4 " />
-          <div className="w-full mt-4">
+          <div className="w-full mt-4 mx-auto">
             {data ? (
               <div className="text-center">
                 <h2 className="text-green-500 text-lg font-bold">
@@ -178,6 +195,17 @@ const Signup = ({ toggleForm }) => {
                 <p className="text-gray-600 mt-2">
                   You have registered successfully.
                 </p>
+                <div className="flex justify-center items-center pt-4">
+                  <p className="text-sm font-semibold">
+                    Go For Login {" "}
+                    <span
+                      className="text-[#6CBD44] cursor-pointer"
+                      onClick={toggleForm}
+                    >
+                      Login Now
+                    </span>
+                  </p>
+                </div>
               </div>
             ) : (
               <form className="w-full mx-auto" onSubmit={handleSubmit}>
@@ -215,7 +243,7 @@ const Signup = ({ toggleForm }) => {
                       <select
                         id="country-code"
                         name="countryCode"
-                        className="h-[30px] md:w-[25%]"
+                        className="h-[30px] w-[18%] md:w-[25%] "
                         value={formData.countryCode}
                         onChange={handleCountryCodeChange}
                         required
@@ -237,7 +265,11 @@ const Signup = ({ toggleForm }) => {
                         onChange={handleInputChange}
                       />
                     </div>
-                    {errors.mobileNumber && <p className="text-red-500 text-sm">{errors.mobileNumber}</p>}
+                    {errors.mobileNumber && (
+                      <p className="text-red-500 text-sm">
+                        {errors.mobileNumber}
+                      </p>
+                    )}
                   </div>
                   <InputField
                     id="email"
@@ -249,32 +281,70 @@ const Signup = ({ toggleForm }) => {
                     value={formData.email}
                     onChange={handleInputChange}
                   />
-                  {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+                  {errors.email && (
+                    <p className="text-red-500 text-sm">{errors.email}</p>
+                  )}
                 </div>
 
-                <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
-                <InputField
+                <div className="flex flex-col relative md:flex-row md:space-x-4 md:mt-8">
+                  <div className="flex flex-col md:w-[48%] w-full relative">
+                    <label
+                      htmlFor="password"
+                      className="text-black font-bold text-base text-sm m-1"
+                    >
+                      Password
+                    </label>
+                    <input
                       id="password"
-                      type="password"
-                      label="Password"
+                      type={isPasswordVisible ? "text" : "password"}
+                      className="h-[30px] w-full px-4 border rounded-lg border-[#E3E3E3]"
                       name="password"
                       placeholder="Enter Your Password"
                       required
                       value={formData.password}
                       onChange={handleInputChange}
                     />
-                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-                    <InputField
+                    <span
+                      className="absolute right-2 top-11 sm:top-11  transform -translate-y-1/2 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                    </span>
+                    {errors.password && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.password}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col md:w-[48%] w-full relative">
+                   <label
+                      htmlFor="confirm-password"
+                      className="text-black font-bold text-base text-sm m-1"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
                       id="confirm-password"
-                      type="password"
-                      label="Confirm Password"
+                      type={isConfirmPasswordVisible ? "text" : "password"}
+                      className="h-[30px] w-full px-4 border rounded-lg border-[#E3E3E3]"
                       name="confirmPassword"
                       placeholder="Confirm Your Password"
                       required
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                     />
-                    {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+                  <span
+                    className="absolute right-2 top-11 sm:top-11 transform -translate-y-1/2 cursor-pointer"
+                    onClick={toggleConfirmPasswordVisibility}
+                  >
+                    {isConfirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                  </div>
                 </div>
                 <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
                   <div className="flex flex-col md:w-[48%] w-full">
@@ -296,6 +366,7 @@ const Signup = ({ toggleForm }) => {
                         <option
                           key={`${nationality}-${index}`}
                           value={nationality}
+                          selected={nationality === "United Arab Emirates"}
                         >
                           {nationality}
                         </option>
@@ -325,7 +396,7 @@ const Signup = ({ toggleForm }) => {
                     type="submit"
                     className="h-[42px] w-full bg-[#6CBD44] hover:bg-[#6CBD44] text-white text-sm font-semibold py-2 px-4 rounded"
                   >
-                    {loading ? "Registering..." : "Register"}
+                    Register
                   </button>
                   {error && (
                     <p className="text-red-500 mt-2">{error.message}</p>
