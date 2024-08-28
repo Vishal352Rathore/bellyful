@@ -152,7 +152,7 @@ const Cart = () => {
           {cartItems?.map((items, index) => (
             <div className="flex gap-6 mt-8 md:mt-14" key={index}>
               {/* {/ Product Section /} */}
-              <div className="relative shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center w-[80px] md:w-1/6 sm:w-1/3">
+              <div className="relative shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center w-[125px] md:w-1/6 sm:w-1/3">
                 <span
                   className="absolute -top-3 -left-3 cursor-pointer"
                   onClick={() => removeCartItem(items.productId)}
@@ -184,22 +184,22 @@ const Cart = () => {
                 </div>
               </div>
 
-              <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-[#F1FFE3] w-[80px] md:w-1/6 sm:w-1/3">
+              <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-[#F1FFE3] w-[125px] md:w-1/6 sm:w-1/3">
                 <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-tight">
                   AED
                 </p>
-                <p className="text-[18px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
+                <p className="text-[15px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
                   {items?.amazonPrice}
                 </p>
                 <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
                   5 liter
                 </p>
               </div>
-              <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-white w-[80px] md:w-1/6 sm:w-1/3">
+              <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-white w-[125px] md:w-1/6 sm:w-1/3">
                 <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-tight">
                   AED
                 </p>
-                <p className="text-[18px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
+                <p className="text-[15px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
                   {items?.carrefourPrice || "NA"}
                 </p>
                 <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
@@ -231,7 +231,7 @@ const Cart = () => {
           <p className="text-[18px] md:text-[24px] text-gray-800 font-medium leading-tight">
             AED
           </p>
-          <p className="text-[18px] sm:text-[32px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
+          <p className="text-[15px] sm:text-[32px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
             {cartTotal?.amazonSubTotal}
           </p>
           <button className="w-full bg-[#6CBD44]  sm:px-8 sm:py-2 md:px-8 md:py-2 rounded-full text-white text-[10px] sm:text-[20px] md:text-[24px] font-medium">
@@ -243,7 +243,7 @@ const Cart = () => {
           <p className="text-[18px] md:text-[24px] text-gray-800 font-medium leading-tight">
             AED
           </p>
-          <p className="text-[18px] sm:text-[32px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
+          <p className="text-[15px] sm:text-[32px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
             {cartTotal?.carrefourSubTotal}
           </p>
           <button className="w-full bg-[#6CBD44] sm:px-8 sm:py-2 md:px-8 md:py-2 rounded-full text-white text-[10px] sm:text-[20px] md:text-[24px] font-medium">

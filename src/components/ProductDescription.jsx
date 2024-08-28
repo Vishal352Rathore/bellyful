@@ -104,9 +104,9 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center space-y-8 lg:space-y-0 lg:space-x-4 p-4 mt-8">
+      <div className="flex flex-col items-center space-y-8 lg:space-y-0 lg:space-x-4 p-4 sm:mt-8">
   <div className="grid grid-cols-1 lg:grid-cols-5 justify-center items-center gap-4 w-full max-w-screen-xl">
-    <div className="w-full flex justify-center sm:h-[314px] col-span-2 lg:w-1/2 lg:h-[414px] mt-12">
+    <div className="w-full flex justify-center h-[214px] sm:h-[314px] col-span-2 lg:w-1/2 lg:h-[414px] mt-12">
       <img
         src={ProductDescription?.image_path}
         alt={ProductDescription?.name}
@@ -141,10 +141,10 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
         </p>
       </div>
 
-      <p className="text-sm font-normal text-gray-700 dark:text-gray-400 line-clamp-3 pt-4">
+      <p className="text-sm font-normal text-gray-700 dark:text-gray-400 line-clamp-3 py-4">
         {ProductDescription?.name}
       </p>
-      <div className="flex flex-col lg:flex-row mt-8 space-y-4 lg:space-y-0 lg:space-x-12">
+      <div className="flex flex-col lg:flex-row items-center mt-8 space-y-4 lg:space-y-0 lg:space-x-12">
         <p className="h-9 w-full lg:w-[261px] rounded-full text-xl text-center border border-gray-400 flex items-center justify-center space-x-8">
           <span
             className="text-[#6CBD44] text-4xl cursor-pointer"
