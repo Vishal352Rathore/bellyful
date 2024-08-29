@@ -49,6 +49,7 @@ const Signup = ({ toggleForm }) => {
     dateOfBirth: "",
   });
 
+ 
   const [errors, setErrors] = useState({});
   const [countryCodes, setCountryCodes] = useState([]);
   const [nationalities, setNationalities] = useState([]); // New state for nationalities
@@ -58,8 +59,11 @@ const Signup = ({ toggleForm }) => {
     "POST",
     submitForm ? formData : null
   );
+  const today = new Date();
+  const minAgeDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()).toISOString().split("T")[0];
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
@@ -388,6 +392,7 @@ const Signup = ({ toggleForm }) => {
                       required
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
+                      max={minAgeDate} 
                     />
                   </div>
                 </div>
