@@ -60,7 +60,7 @@ const Signup = ({ toggleForm }) => {
     submitForm ? formData : null
   );
   const today = new Date();
-  const minAgeDate = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()).toISOString().split("T")[0];
+  const minAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()).toISOString().split("T")[0];
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 

@@ -9,15 +9,17 @@ import defaultImage from "../images/assorted-beverage-1.png";
 
 const Groceries = () => {
   const location = useLocation();
+  console.log("location", location);
+  const { category } = location?.state || "house_hold";
 
   const [subcategories, setSubcategories] = useState([]);
 
-  const [isSubcategory, setIsSubcategory] = useState(false);
+  // const [isSubcategory, setIsSubcategory] = useState(false);
 
   var token = localStorage.getItem("userToken");
 
   const { data, loading, error } = useApi(
-    process.env.REACT_APP_GET_CATEGORY_API_URL,
+    `${process.env.REACT_APP_GET_CATEGORY_API_URL}?category=${category}`,
     "GET",
     null,
     token
@@ -27,7 +29,11 @@ const Groceries = () => {
     if (data) {
       console.log("All Subcategories", data);
       if (location.pathname === "/Groceries/category") {
-        setSubcategories(data.categories[location.state.index].sub_categories);
+        const fetchedSubcategories = data.categories[location.state.index]?.sub_categories;
+        if (fetchedSubcategories && fetchedSubcategories.length > 0) {
+          setSubcategories(fetchedSubcategories);
+        }
+        // setSubcategories(data.categories[location.state.index]?.sub_categories);
       }
       if (location.pathname === "/Groceries") {
         setSubcategories(data.categories);
@@ -91,13 +97,14 @@ const Groceries = () => {
               to={subcategory.sub_categories ? "category" : "subcategory"}
               state={{
                 categoryName: subcategory.name,
-                isSubcategory: isSubcategory,
+                category : category ,
+                // isSubcategory: isSubcategory,
                 index: index,
               }}
               onClick={() => {
                 if (subcategory.sub_categories) {
                   setSubcategories(subcategory.sub_categories);
-                  setIsSubcategory(true);
+                  // setIsSubcategory(true);
                 }
               }}
               key={index}
@@ -106,17 +113,18 @@ const Groceries = () => {
                 <p className="text-center font-bold text-xs sm:text-sm md:text-md lg:text-lg line-clamp-2 mb-4">
                   {subcategory.name}
                 </p>
-                <div  className=" w-[100px] h-[100px] sm:w-[160px] sm:h-[160px] md:w-[198px] md:h-[166px] object-fit ">
-                <img
-                  src={
-                    subcategory.image_url ? subcategory.image_url : defaultImage
-                  }
-                  alt={subcategory.name}
-                  className=" w-full h-full "
-                />
-
+                <div className=" w-[100px] h-[100px] sm:w-[160px] sm:h-[160px] md:w-[198px] md:h-[166px] object-fit ">
+                  <img
+                    src={
+                      subcategory.image_url
+                        ? subcategory.image_url
+                        : defaultImage
+                    }
+                    alt={subcategory.name}
+                    className=" w-full h-full "
+                  />
                 </div>
-              </div>              
+              </div>
             </Link>
           ))}
         </div>

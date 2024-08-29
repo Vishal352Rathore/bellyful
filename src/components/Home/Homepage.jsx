@@ -57,7 +57,7 @@ const Homepage = () => {
         </div>
 
         <div className="flex flex-col justify-center md:flex-row gap-5 md:gap-10">
-          <Link to="Groceries">
+          <Link to="Groceries" state={{category:"house_hold"}}>
             <div className="bg-household-cleaners-gradient relative flex justify-center items-center md:p-10  p-5 w-full md:w-[44vw] h-auto border rounded-xl">
               <div className="text-center">
                 <div className=" mb-5 text-lg md:text-xl text-black font-semibold">
@@ -71,7 +71,7 @@ const Homepage = () => {
               </div>
             </div>
           </Link>
-          <Link to="Groceries">
+          <Link to="Groceries" state={{category:"groceries"}}>
             <div className="bg-grocery-gradient relative flex justify-center items-center p-5 md:p-10 w-full md:w-[44vw] h-auto border rounded-xl">
               <div className="text-center">
                 <div className="mb-5  text-lg md:text-xl text-black font-semibold">

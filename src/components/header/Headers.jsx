@@ -12,17 +12,7 @@ import './Header.css';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [subcategories, setSubcategories] = useState([]);
-  const [categories, setCategories] = useState([
-    {
-      name: "Household Cleaners",
-      subcategories: [], // Initialize with empty array
-    },
-    {
-      name: "Grocery",
-      subcategories: [{ name: "Subcategory 2-1" }, { name: "Subcategory 2-2" }],
-    },
-  ]);
+
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -40,32 +30,7 @@ const Header = () => {
   }, [])
   
 
-  const { data, loading, error } = useApi(
-    process.env.REACT_APP_GET_CATEGORY_API_URL,
-    "GET",
-    null,
-    token
-  );
 
-  useEffect(() => {
-    if (data) {
-      // console.log("All Subcategories", data);
-      setSubcategories(data.categories);
-    }
-    if (error) {
-      console.error("Error:", error);
-    }
-  }, [data, error]);
-
-  useEffect(() => {
-    setCategories((prevCategories) =>
-      prevCategories.map((category) =>
-        category.name === "Household Cleaners"
-          ? { ...category, subcategories }
-          : category
-      )
-    );
-  }, [subcategories]);
   useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add("no-scroll");
@@ -296,7 +261,7 @@ const Header = () => {
       <div className="bg-green-900 text-white">
         <div className="flex items-center justify-between h-10 max-w-screen-xxl mx-auto px-4 md:px-12">
           <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
-            <AllCategoryDropdown categories={categories} />
+            <AllCategoryDropdown />
 
             {/* <p className="text-sm font-semibold text-amber-50 w-full h-full flex items-center justify-center">
               <DehazeIcon className="mr-1" />

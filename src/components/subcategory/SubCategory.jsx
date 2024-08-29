@@ -7,7 +7,7 @@ import useApi from "../../Customhook/useApi";
 const SubCategory = () => {
   const location = useLocation();
   console.log("location", location);
-  const { categoryName, isSubcategory } = location.state || {};
+  const { categoryName, category } = location.state || {};
 
   const [currentPage, setCurrentPage] = useState("Colddriks");
 
