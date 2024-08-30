@@ -25,6 +25,7 @@ const Groceries = () => {
     token
   );
 
+
   useEffect(() => {
     if (data) {
       console.log("All Subcategories", data);
@@ -134,3 +135,5 @@ const Groceries = () => {
 };
 
 export default Groceries;
+
+

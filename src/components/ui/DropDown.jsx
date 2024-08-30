@@ -239,16 +239,26 @@ const AllCategoryDropdown = () => {
     setOpenSubcategory(index);
   };
 
+  // const handleCategoryClick = (categoryName) => {
+  //   if (isMobileView) {
+  //     // Redirect to the respective page on mobile view
+  //     navigate(categoryName === "house_hold" || "groceries"? "category" : "subcategories");
+  //     setIsDropdownOpen(false);
+  //   }
+  // };
   const handleCategoryClick = (categoryName) => {
     if (isMobileView) {
-      // Redirect to the respective page on mobile view
-      navigate(categoryName === "Household" || "Grocery"? "" : "Grocery");
+      if (categoryName === "Household Cleaners") {
+        navigate("/category");
+      } else if (categoryName === "Grocery") {
+        navigate("/category");
+      }
       setIsDropdownOpen(false);
     }
   };
 
   const filteredCategories = isMobileView
-    ? [{ name: "Household" }, { name: "Grocery" }]
+    ? [{ name: "Household Cleaners" }, { name: "Grocery" }]
     : categories;
 
   return (

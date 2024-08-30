@@ -29,46 +29,103 @@ const Login = ({ toggleForm, setModalOpen }) => {
     setPostData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validateForm();
     setErrors(validationErrors);
+
     if (Object.keys(validationErrors).length === 0) {
       setTriggerApiCall(true); // Trigger the API call
     }
   };
 
+
+  // useEffect(() => {
+  //   if (data?.status === false && data.message) {
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       api: data.message
+  //     }));
+  //     setTriggerApiCall(false); // Reset to avoid multiple hits
+  //   } else if (data?.status === true) {
+  //     setErrors({});
+  //     console.log("Login successful:", data);
+  //     localStorage.setItem("userToken", data.items.token);
+  //     localStorage.setItem("userId", data.items.userId);
+  //     alert("Login Successfully");
+  //     setModalOpen(false);
+  //     setTriggerApiCall(false); // Reset to avoid multiple hits
+  //   }
+  //   if (error) {
+  //     console.error("Error:", error);
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       api: "An unexpected error occurred. Please try again."
+  //     }));
+  //     setTriggerApiCall(false); // Reset to avoid multiple hits
+  //   }
+  // }, [data, error]);
+  
   useEffect(() => {
-    if (data?.status) {
+    if (data?.status === false && data.message) {
+        if (data.message.includes('email')) {
+        // Customize error handling if API provides specific messages
+        setErrors({
+          email: "This email doesn't exist. Please double-check your email",
+          password: ""
+        });
+      } else if (data.message.includes('password')) {
+        setErrors({
+          email: "",
+          password: "Invalid password"
+        });
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          api: data.message
+        }));
+      }
+      setTriggerApiCall(false); // Reset to avoid multiple hits
+    } else if (data?.status === true) {
+      // API returned success
+      setErrors({});
       console.log("Login successful:", data);
       localStorage.setItem("userToken", data.items.token);
       localStorage.setItem("userId", data.items.userId);
-      alert("Login Succesfully")
+      alert("Login Successfully");
       setModalOpen(false);
+      setTriggerApiCall(false); // Reset to avoid multiple hits
     }
     if (error) {
       console.error("Error:", error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        api: "An unexpected error occurred. Please try again."
+      }));
+      setTriggerApiCall(false); // Reset to avoid multiple hits
     }
   }, [data, error]);
-
+  
   const validateForm = () => {
     const errors = {};
     const passwordRegex = /^.{6,10}$/;
-    if (
-      !postData.email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)
-    ) {
-      errors.email = "Valid email is required";
+  
+    if (!postData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)) {
+      errors.email = "Write Valid Email Address";
     }
-
+  
     if (!postData.password) {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(postData.password)) {
-      errors.Password =
-        "Must between 6 to 10 chars";
+      errors.password = "Password must be between 6 to 10 characters";
     }
+  
     return errors;
   };
+  
 
   return (
     <div className="flex h-full w-full items-center justify-center md:p-0">
@@ -98,6 +155,9 @@ const Login = ({ toggleForm, setModalOpen }) => {
                 onChange={handleChange}
                 required
               />
+              {errors.api && (
+                <p className="text-red-500 text-sm mt-2">{errors.api}</p>
+              )}
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email}</p>
               )}
@@ -119,10 +179,13 @@ const Login = ({ toggleForm, setModalOpen }) => {
                 className="absolute right-2 top-9 sm:top-10 transform -translate-y-1/2 cursor-pointer"
                 onClick={togglePasswordVisibility}
               >
-                {isPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                {isPasswordVisible ? <FaEye /> : <FaEyeSlash />}
               </span>
-              {errors.Password && (
-                <p className="text-red-500 text-xs mt-1">{errors.Password}</p>
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
+              )}
+              {errors.api && (
+                <p className="text-red-500 text-sm mt-2">{errors.api}</p>
               )}
             </div>
             <div className="flex flex-col mt-6">

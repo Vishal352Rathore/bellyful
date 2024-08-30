@@ -11,16 +11,24 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { productName } = location.state || {};
-  console.log("productName", productName);
+  // console.log("productName", productName);
   const encodedProductName = encodeURIComponent(productName);
+
   const [ProductDescription, setProductDescription] = useState({});
   const [carrefourAmazonPrice, setCarrefourAmazonPrice] = useState({
     amazonPrice: null,
     carrefourPrice: null,
   });
+  const [quantity, setQuantity] = useState(1);
+  const [postData, setPostData] = useState({
+    userId: localStorage.getItem("userId"),
+    quantity: 1,
+    name: "",
+    image_path: "",
+  });
+  const [addCart, setAddCart] = useState(false);
 
-  var token = localStorage.getItem("userToken");
-  var userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("userToken");
   const { data, loading, error } = useApi(
     `${process.env.REACT_APP_GET_PRODUCT_DESCRIPTION}?productName=${encodedProductName}`,
     "GET",
@@ -34,11 +42,10 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
       setProductDescription(
         data.products.Amazon[0] || data.products.Carrefouruae[0]
       );
-      setCarrefourAmazonPrice((previousState) => ({
-        previousState,
+      setCarrefourAmazonPrice({
         amazonPrice: data.products?.Amazon[0].price,
         carrefourPrice: data.products?.Carrefouruae?.[0]?.price || "NA",
-      }));
+      });
       setPostData((prevPostData) => ({
         ...prevPostData,
         name:
@@ -50,15 +57,8 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
     }
   }, [data, error]);
 
-  const [addCart, setAddCart] = useState(false);
-  const [postData, setPostData] = useState({
-    userId: userId,
-    quantity: 1,
-    name: "",
-    image_path: "",
-  });
-
   const handleIncrement = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
     setPostData((prevPostData) => ({
       ...prevPostData,
       quantity: prevPostData.quantity + 1,
@@ -66,6 +66,9 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
   };
 
   const handleDecrement = () => {
+    setQuantity((prevQuantity) =>
+      prevQuantity > 1 ? prevQuantity - 1 : prevQuantity
+    );
     setPostData((prevPostData) => ({
       ...prevPostData,
       quantity:
@@ -102,96 +105,99 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
     }
   }, [addCartData, addCartError, navigate]);
 
+  // Calculate the total price based on quantity and Amazon price
+  const amazonPrice = parseFloat(carrefourAmazonPrice.amazonPrice) || 0;
+  const totalAmazonPrice = quantity * amazonPrice;
   return (
     <>
       <div className="flex flex-col items-center space-y-8 lg:space-y-0 lg:space-x-4 p-4 sm:mt-8">
-  <div className="grid grid-cols-1 lg:grid-cols-5 justify-center items-center gap-4 w-full max-w-screen-xl">
-    <div className="w-full flex justify-center h-[214px] sm:h-[314px] col-span-2 lg:w-1/2 lg:h-[414px] mt-12">
-      <img
-        src={ProductDescription?.image_path}
-        alt={ProductDescription?.name}
-        className="sm:w-full sm:h-auto object-contain"
-      />
-    </div>
+        <div className="grid grid-cols-1 lg:grid-cols-5 justify-center items-center gap-4 w-full max-w-screen-xl">
+          <div className="w-full flex justify-center h-[214px] sm:h-[314px] col-span-2 lg:w-1/2 lg:h-[414px] mt-12">
+            <img
+              src={ProductDescription?.image_path}
+              alt={ProductDescription?.name}
+              className="sm:w-full sm:h-auto object-contain"
+            />
+          </div>
 
-    <div className="col-span-3 w-full flex flex-col space-y-0">
-      <p className="sm:text-sm md:text-md lg:text-lg xl:text-3xl font-extrabold">
-        {ProductDescription?.name}
-      </p>
-      <div className="flex items-center pt-2 sm:pt-4 mt-0">
-        <p className="text-xl md:text-2xl lg-text-4xl font-medium font-black text-[#6CBD44]">
-          {ProductDescription?.price}
-        </p>
-        {stars.map((isFilled, index) => (
-          <svg
-            key={index}
-            className={`w-4 h-4 ml-2 ${
-              isFilled ? "text-yellow-300" : "text-gray-300 dark:text-gray-500"
-            }`}
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 20"
-          >
-            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-          </svg>
-        ))}
-        <p className="w-[50px] h-[16px] ml-4 mt-6 text-[10px] bg-[#E0EEE9] text-black text-center font-bold">
-          IN Stock
-        </p>
+          <div className="col-span-3 w-full flex flex-col space-y-0">
+            <p className="sm:text-sm md:text-md lg:text-lg xl:text-3xl font-extrabold">
+              {ProductDescription?.name}
+            </p>
+            <div className="flex items-center pt-2 sm:pt-4 mt-0">
+              <p className="text-xl md:text-2xl lg:text-4xl font-medium font-black text-[#6CBD44]">
+                {ProductDescription?.price}
+              </p>
+              {stars.map((isFilled, index) => (
+                <svg
+                  key={index}
+                  className={`w-4 h-4 ml-2 ${
+                    isFilled
+                      ? "text-yellow-300"
+                      : "text-gray-300 dark:text-gray-500"
+                  }`}
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 22 20"
+                >
+                  <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                </svg>
+              ))}
+              <p className="w-[50px] h-[16px] ml-4 mt-6 text-[10px] bg-[#E0EEE9] text-black text-center font-bold">
+                IN Stock
+              </p>
+            </div>
+
+            <p className="text-sm font-normal text-gray-700 dark:text-gray-400 line-clamp-3 py-4">
+              {ProductDescription?.name}
+            </p>
+            <div className="flex flex-col lg:flex-row items-center mt-8 space-y-4 lg:space-y-0 lg:space-x-12">
+              <p className="h-9 w-full lg:w-[261px] rounded-full text-xl text-center border border-gray-400 flex items-center justify-center space-x-8">
+                <span
+                  className="text-[#6CBD44] text-4xl cursor-pointer"
+                  onClick={handleDecrement}
+                >
+                  -
+                </span>
+                <span className="text-gray-500">|</span>
+                <span>{quantity}</span>
+                <span className="text-gray-500">|</span>
+                <span
+                  className="text-[#6CBD44] text-2xl cursor-pointer"
+                  onClick={handleIncrement}
+                >
+                  +
+                </span>
+              </p>
+
+              <button
+                type="submit"
+                onClick={handleAddCart}
+                className="h-12 w-full lg:w-[261px] rounded-full bg-[#6CBD44] text-white"
+              >
+                Add to Cart
+              </button>
+            </div>
+            <div className="mt-4">
+              <p className="font-bold text-md">Price Comparison</p>
+              <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] bg-[#F4F4F4] text-black justify-between mt-4 text-wrap">
+                <img src={carrefour} alt="" className="w-[35px] h-[29px]" />
+                <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
+                  {carrefourAmazonPrice.carrefourPrice}
+                </span>
+              </p>
+              <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] text-black justify-between mt-4">
+                <img src={amazon} alt="" className="w-[50px] h-[25px]" />
+                <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
+                  ${totalAmazonPrice.toFixed(2)}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <p className="text-sm font-normal text-gray-700 dark:text-gray-400 line-clamp-3 py-4">
-        {ProductDescription?.name}
-      </p>
-      <div className="flex flex-col lg:flex-row items-center mt-8 space-y-4 lg:space-y-0 lg:space-x-12">
-        <p className="h-9 w-full lg:w-[261px] rounded-full text-xl text-center border border-gray-400 flex items-center justify-center space-x-8">
-          <span
-            className="text-[#6CBD44] text-4xl cursor-pointer"
-            onClick={handleDecrement}
-          >
-            -
-          </span>
-          <span className="text-gray-500">|</span>
-          <span>{postData.quantity}</span>
-          <span className="text-gray-500">|</span>
-          <span
-            className="text-[#6CBD44] text-2xl cursor-pointer"
-            onClick={handleIncrement}
-          >
-            +
-          </span>
-        </p>
-
-        <button
-          type="submit"
-          onClick={handleAddCart}
-          className="h-12 w-full lg:w-[261px] rounded-full bg-[#6CBD44] text-white"
-        >
-          Add to Cart
-        </button>
-      </div>
-      <div className="mt-4">
-        <p className="font-bold text-md">Price Comparison</p>
-        <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] bg-[#F4F4F4] text-black justify-between mt-4 text-wrap">
-          <img src={carrefour} alt="" className="w-[35px] h-[29px]" />
-          <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
-            {carrefourAmazonPrice.carrefourPrice}
-          </span>
-        </p>
-        <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] text-black justify-between mt-4">
-          <img src={amazon} alt="" className="w-[50px] h-[25px]" />
-          <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
-            {carrefourAmazonPrice.amazonPrice}
-          </span>
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-      <div className="w-full p-4 lg:p-20">
+     <div className="w-full p-4 lg:p-20">
         <h5 className="text-2xl font-bold tracking-tight text-gray-900">
           Description
         </h5>

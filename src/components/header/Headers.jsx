@@ -7,13 +7,13 @@ import { Link } from "react-router-dom";
 import LoginModal from "../LoginModel";
 import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
-import './Header.css';
+import "./Header.css";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
 
-
+  const token = localStorage.getItem("userToken");
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
@@ -21,15 +21,34 @@ const Header = () => {
     setIsMenuOpen(false); // Close the menu
   };
 
-  var token = localStorage.getItem("userToken");
 
-  useEffect(() => {
-  if(!token){
-    setModalOpen(true);
-  }
-  }, [])
   
 
+  // Handle input change
+  // const handleInputChange = (e) => {
+  //   setSearchTerm(e.target.value);
+  // };
+
+  // // Handle search button click
+  // const handleSearchClick = () => {
+  //   if (searchTerm.trim()) {
+  //     setSearchTriggered(true);
+  //   } else {
+  //     console.warn("Search term is empty!");
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (data || error) {
+  //     setSearchTriggered(false);
+  //   }
+  // }, [data, error]);
+
+  useEffect(() => {
+    if (!token) {
+      setModalOpen(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -43,7 +62,6 @@ const Header = () => {
       document.body.classList.remove("no-scroll");
     };
   }, [isModalOpen]);
-
 
   // const handleLogout = () =>{
   //   localStorage.removeItem("userToken");
@@ -59,7 +77,6 @@ const Header = () => {
       window.location.reload();
     }
   };
-  
 
   return (
     <>
@@ -115,9 +132,14 @@ const Header = () => {
                 type="search"
                 placeholder="Enter Keyword"
                 className="p-2 pl-10 pr-14 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                // value={searchTerm}
+                // onChange={handleInputChange}
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <span className="text-black text-base subpixel-antialiased font-semibold">
+                <span
+                  // onClick={handleSearchClick}
+                  className="text-black text-base subpixel-antialiased font-semibold"
+                >
                   Search
                 </span>
               </div>
@@ -143,7 +165,7 @@ const Header = () => {
               </li>
               <li className="flex items-center space-x-1">
                 <button
-                  onClick={()=>handleLogout()}
+                  onClick={() => handleLogout()}
                   className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500 flex items-center"
                 >
                   <PermIdentityIcon className="mr-1" />
@@ -232,30 +254,20 @@ const Header = () => {
               </Link>
             </li>
             <li className="flex items-center space-x-1">
-                <button
-                  onClick={()=>handleLogout()}
-                  className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500 flex items-center"
-                >
-                  <PermIdentityIcon className="mr-1" />
-                  Log Out
-                </button>
-              </li>
-            {/* <li>
               <button
-                onClick={() => {
-                  openModal();
-                  handleMenuItemClick();
-                }}
-                className="text-black text-base font-semibold hover:text-green-500 flex items-center"
+                onClick={() => handleLogout()}
+                className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500 flex items-center"
               >
                 <PermIdentityIcon className="mr-1" />
-                LogIn
+                Log Out
               </button>
-            </li> */}
+            </li>
           </ul>
         </div>
       </div>
-      {isModalOpen && <LoginModal closeModal={closeModal} setModalOpen={setModalOpen}/>}
+      {isModalOpen && (
+        <LoginModal closeModal={closeModal} setModalOpen={setModalOpen} />
+      )}
 
       {/* Bottom Navigation */}
       <div className="bg-green-900 text-white">

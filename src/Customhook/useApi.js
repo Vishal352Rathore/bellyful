@@ -29,6 +29,7 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     try {
       const response = await fetch(url, options);
       // console.log("response" , response);
+      console.log("API Response:", data, loading, error);
       if (!response.ok) throw new Error('Network response was not ok');
       const result = await response.json();
       // console.log("result" , result);
@@ -45,5 +46,6 @@ function useApi(url, method = 'GET', body = null ,token = null) {
 }
 
 export default useApi;
+
 
 
