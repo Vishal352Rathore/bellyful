@@ -50,6 +50,7 @@ const Signup = ({ toggleForm }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [isRagisterd,setIsRagisterd] = useState(false);
   const [countryCodes, setCountryCodes] = useState([]);
   const [nationalities, setNationalities] = useState([]); // New state for nationalities
   const [submitForm, setSubmitForm] = useState(false);
@@ -80,68 +81,150 @@ const Signup = ({ toggleForm }) => {
     setIsConfirmPasswordVisible((prevState) => !prevState);
   };
 
+
+  // useEffect(() => {
+  //   if (data?.status === false) {
+  //     // Default error message
+  //     let errorMessage = "An unexpected error occurred. Please try again.";
+
+  //     if (data.message) {
+  //       // Check errorName and message for more details
+  //       const { errorName, message } = data.message;
+
+  //       if (errorName === "duplicateUser") {
+  //         errorMessage = "Email or mobile number already exists.";
+  //         setErrors({
+  //           email: message.includes("Email") ? "Email already exists" : "",
+  //           mobileNumber: message.includes("mobile") ? "Mobile number already exists" : "",
+  //         });
+  //       } else {
+  //         // Handle other types of errors if applicable
+  //         errorMessage = message || errorMessage;
+  //       }
+  //     }
+
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       api: errorMessage,
+  //     }));
+  //     setUserExistsError("User already exists. Please use a different email or phone number.");
+  //     setSubmitForm(false); // Prevent further submission attempts
+  //   } else if (data?.status === true) {
+  //     setErrors({});
+  //     setUserExistsError(""); // Reset user existence error
+  //     localStorage.setItem("userToken", data.items.token);
+  //     localStorage.setItem("userId", data.items.userId);
+  //     alert("Signup Successfully");
+  //     setFormData({
+  //       firstName: "",
+  //       lastName: "",
+  //       mobileNumber: "",
+  //       countryCode: "+971",
+  //       email: "",
+  //       password: "",
+  //       confirmPassword: "",
+  //       nationality: "United Arab Emirates",
+  //       dateOfBirth: "",
+  //     });
+  //     setSubmitForm(false);
+  //   }
+
+  //   if (error) {
+  //     console.error("Error:", error);
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       api: typeof error.message === 'string' ? error.message : "An unexpected error occurred. Please try again.",
+  //     }));
+  //     setSubmitForm(false); // Prevent further submission attempts
+  //   }
+  // }, [data, error]);
+
   useEffect(() => {
-    if (data?.status === false) {
-      // Default error message
-      let errorMessage = "An unexpected error occurred. Please try again.";
-  
-      if (data.message) {
-        // Check errorName and message for more details
-        const { errorName, message } = data.message;
-  
-        if (errorName === "duplicateUser") {
-          errorMessage = "Email or mobile number already exists.";
-          setErrors({
-            email: message.includes("Email") ? "Email already exists" : "",
-            mobileNumber: message.includes("mobile") ? "Mobile number already exists" : "",
-          });
-        } else {
-          // Handle other types of errors if applicable
-          errorMessage = message || errorMessage;
+    if (data) {
+      if (data.status === false) {
+        // Handle errors if status is false
+        let errorMessage = "An unexpected error occurred. Please try again.";
+
+        if (data.message) {
+          const { errorName, message } = data.message;
+
+          if (errorName === "duplicateUser") {
+            errorMessage = "Email or mobile number already exists.";
+            setErrors({
+              email: message.includes("Email") ? "Email already exists" : "",
+              mobileNumber: message.includes("mobile")
+                ? "Mobile number already exists"
+                : "",
+            });
+            setSubmitForm(false); // Prevent form submission
+          } else {
+            errorMessage = message || errorMessage;
+          }
         }
+
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          api: errorMessage,
+        }));
+        setUserExistsError(errorMessage);
+        setSubmitForm(false); // Ensure no further submission
+      } else if (data.status === true) {
+        // Handle success if status is true
+        setErrors({});
+        setUserExistsError("");
+        setIsRagisterd(true);
+        alert("Signup Successfully");
+
+        // Reset the form
+        setFormData({
+          firstName: "",
+          lastName: "",
+          mobileNumber: "",
+          countryCode: "+971",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          nationality: "United Arab Emirates",
+          dateOfBirth: "",
+        });
+        setSubmitForm(false);
       }
-  
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        api: errorMessage,
-      }));
-      setUserExistsError("User already exists. Please use a different email or phone number.");
-      setSubmitForm(false); // Prevent further submission attempts
-    } else if (data?.status === true) {
-      setErrors({});
-      setUserExistsError(""); // Reset user existence error
-      localStorage.setItem("userToken", data.items.token);
-      localStorage.setItem("userId", data.items.userId);
-      alert("Signup Successfully");
-      setFormData({
-        firstName: "",
-        lastName: "",
-        mobileNumber: "",
-        countryCode: "+971",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        nationality: "United Arab Emirates",
-        dateOfBirth: "",
-      });
-      setSubmitForm(false);
     }
-  
+
     if (error) {
       console.error("Error:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
-        api: typeof error.message === 'string' ? error.message : "An unexpected error occurred. Please try again.",
+        api:
+          typeof error.message === "string"
+            ? error.message
+            : "An unexpected error occurred. Please try again.",
       }));
       setSubmitForm(false); // Prevent further submission attempts
     }
   }, [data, error]);
-  
-  useEffect(() => {
-    if (data) {
-      console.log("API Response Data:", data); // Log API response
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formErrors = validateForm();
+    setErrors(formErrors);
+
+    if (Object.keys(formErrors).length > 0 || userExistsError) {
+      setSubmitForm(false); // Prevent form submission
+      setIsSubmitting(false);
+      return;
     }
-  }, [data]);
+
+    // No validation errors and user doesn't already exist
+    setIsSubmitting(true);
+    setSubmitForm(true);
+  };
+
+  useEffect(() => {
+    console.log("API Response:", data);
+    // Rest of the code...
+  }, [data, error]);
 
   useEffect(() => {
     // Fetch country codes and nationalities from REST Countries API
@@ -182,51 +265,55 @@ const Signup = ({ toggleForm }) => {
     setFormData({ ...formData, countryCode: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  
-    // Validate form data
-    const formErrors = validateForm();
-    setErrors(formErrors);
-  
-    // Prevent form submission if there are validation errors or user existence errors
-    if (Object.keys(formErrors).length > 0 || userExistsError) {
-      setSubmitForm(false); // Prevent form submission
-      setIsSubmitting(false); // Ensure submitting state is reset
-      return; // Exit the function early
-    }
-  
-    // If no validation errors and user doesn't already exist
-    setIsSubmitting(true);
-    setSubmitForm(true);
-  };
-  
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   // Validate form data
+  //   const formErrors = validateForm();
+  //   setErrors(formErrors);
+
+  //   // Prevent form submission if there are validation errors or user existence errors
+  //   if (Object.keys(formErrors).length > 0 || userExistsError) {
+  //     setSubmitForm(false); // Prevent form submission
+  //     setIsSubmitting(false); // Ensure submitting state is reset
+  //     return; // Exit the function early
+  //   }
+
+  //   // If no validation errors and user doesn't already exist
+  //   setIsSubmitting(true);
+  //   setSubmitForm(true);
+  // };
 
   const validateForm = () => {
     const errors = {};
     const passwordRegex = /^.{6,10}$/;
-  
-    if (!formData.mobileNumber.trim() || !/^\d{10}$/.test(formData.mobileNumber)) {
+
+    if (
+      !formData.mobileNumber.trim() ||
+      !/^\d{10}$/.test(formData.mobileNumber)
+    ) {
       errors.mobileNumber = "Mobile number must be exactly 10 digits";
     }
-  
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+
+    if (
+      !formData.email.trim() ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+    ) {
       errors.email = "Valid email is required";
     }
-  
+
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(formData.password)) {
       errors.password = "Must be between 6 to 10 characters";
     }
-  
+
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-  
+
     return errors;
   };
-  
 
   return (
     <div className="flex flex-col items-center w-full ">
@@ -234,7 +321,7 @@ const Signup = ({ toggleForm }) => {
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8">
           <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-4 " />
           <div className="w-full mt-4 mx-auto">
-            {data ? (
+            {isRagisterd ?  (
               <div className="text-center">
                 <h2 className="text-green-500 text-lg font-bold">
                   Registration successful!
@@ -256,9 +343,6 @@ const Signup = ({ toggleForm }) => {
               </div>
             ) : (
               <form className="w-full mx-auto" onSubmit={handleSubmit}>
-                {userExistsError && (
-                  <div className="text-red-500 mb-4">{userExistsError}</div>
-                )}
                 <div className="flex md:flex-row md:space-x-4 md:gap-0 gap-4">
                   <InputField
                     id="first-name"
@@ -320,26 +404,35 @@ const Signup = ({ toggleForm }) => {
                         {errors.mobileNumber}
                       </p>
                     )}
-                    {errors.api && (
+                    {/* {errors.api && (
                       <p className="text-red-500 text-sm">{errors.api}</p>
-                    )}
+                    )} */}
                   </div>
-                  <InputField
-                    id="email"
-                    type="email"
-                    label="Email Address"
-                    name="email"
-                    placeholder="Enter Your Email Address"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm">{errors.email}</p>
-                  )}
-                  {errors.api && (
+                  <div className="flex flex-col md:w-[48%] w-full ">
+                  <label
+                      htmlFor={"Email Address"}
+                      className="text-black font-bold text-base text-sm m-1"
+                    >
+                      {"Email Address"}
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      // label="Email Address"
+                      name="email"
+                      className="h-[30px] md:w-full px-4 border rounded-lg border-[#E3E3E3]"
+                      placeholder="Enter Your Email Address"
+                      required
+                      value={formData.email}
+                      onChange={handleInputChange}
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm">{errors.email}</p>
+                    )}
+                    {/* {errors.api && (
                     <p className="text-red-500 text-sm">{errors.api}</p>
-                  )}
+                  )} */}
+                  </div>
                 </div>
 
                 <div className="flex flex-col relative md:flex-row md:space-x-4 md:mt-8">
@@ -451,6 +544,7 @@ const Signup = ({ toggleForm }) => {
                 <div className="flex flex-col mt-8">
                   <button
                     type="submit"
+                    onSubmit={handleSubmit}
                     className="h-[42px] w-full bg-[#6CBD44] hover:bg-[#6CBD44] text-white text-sm font-semibold py-2 px-4 rounded"
                   >
                     Register

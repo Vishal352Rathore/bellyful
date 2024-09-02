@@ -6,6 +6,12 @@ import useApi from "../../Customhook/useApi";
 
 const SubCategory = () => {
   const location = useLocation();
+  // const { products = [], categoryName = '' } = location.state || {};
+
+  // useEffect(() => {
+  //   console.log('Received data in SubCategory:', products, categoryName);
+  // }, [products, categoryName]);
+
   console.log("location", location);
   const { categoryName, category } = location.state || {};
 
@@ -16,7 +22,7 @@ const SubCategory = () => {
     setCurrentPage(page);
   };
 
-  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState([]);
 
   var token = localStorage.getItem("userToken");
 
@@ -37,7 +43,7 @@ const SubCategory = () => {
   useEffect(() => {
     if (data) {
       console.log("All Product by categories", data);
-      setProducts(data.items.products);
+      setProduct(data.items.products);
     }
     if (error) {
       console.error("Error:", error);
@@ -80,13 +86,13 @@ const SubCategory = () => {
           )}
         </ul>
       </nav> */}
-    
+
     <div className="flex justify-center p-4 sm:p-4 md:mx-10 sm:mx-4 md:p-4 mt-10 md:mt-20">
         <div
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full"
           style={{ gap: "30px" }}
         >
-        {products?.length>0 ? products?.map((product, index) => (
+        {product?.length>0 ? product?.map((product, index) => (
           <Link
             to="ProductDescription"
             state={{ productName: product.name }}
@@ -115,5 +121,126 @@ const SubCategory = () => {
     </div>
   );
 };
-
 export default SubCategory;
+
+// import React, { useState, useEffect } from "react";
+// import subCategoryBannerBg from "../../images/sub-category-banner-bg.png";
+// import subCategoryBanner from "../../images/sub-category-banner.png";
+// import { Link, useLocation } from "react-router-dom";
+// import useApi from "../../Customhook/useApi";
+
+// const SubCategory = () => {
+//   // const location = useLocation();
+//   // const { products = [], categoryName = "" } = location.state || {}; // Extract data from location.state
+
+//   // Initialize state and API hook
+//   const [currentPage, setCurrentPage] = useState("Colddriks");
+//   const [productList, setProductList] = useState(products); // Use state to manage products
+
+//   const token = localStorage.getItem("userToken");
+
+//   const { data, loading, error } = useApi(
+//     location.pathname === "/Groceries/category/subcategory" ||
+//       location.state?.isSubcategory
+//       ? `${process.env.REACT_APP_GET_PRODUCT_BY_SUBCATEGORY}?sub_category_name=${categoryName}&page=${currentPage}`
+//       : `${process.env.REACT_APP_GET_PRODUCT_BY_CATEGORY}?category_name=${categoryName}&page=${currentPage}`,
+//     "GET",
+//     null,
+//     token
+//   );
+
+// //   useEffect(() => {
+// //     if (data && data.items && Array.isArray(data.items.products)) {
+// //       console.log("Data Received:", data);
+// //       if (data.items.products.length > 0) {
+// //         setProductList(data.items.products);
+// //       } else {
+// //         console.warn("Products array is empty:", data.items.products);
+// //       }
+// //     } else {
+// //       console.error("Invalid data structure or products array is not available");
+// //     }
+// //   }, [data, currentPage, categoryName]); // Add dependencies here
+  
+// //   console.log("Current Page:", currentPage);
+// // console.log("Category Name:", categoryName);
+// // console.log("Product List:", productList);
+
+
+//   const handlePageChange = (e, page) => {
+//     e.preventDefault();
+//     setCurrentPage(page);
+//   };
+
+//   return (
+//     <div className="overflow-x-hidden">
+//       <div className="relative w-full h-[25vh] sm:h-[300px] md:h-[400px] lg:h-[500px]">
+//         <img
+//           src={subCategoryBannerBg}
+//           alt="Background"
+//           className="w-full h-full object-cover"
+//         />
+//         <div className="absolute bottom-0 right-0 flex items-center justify-end p-4 md:p-6 lg:p-8">
+//           <img
+//             src={subCategoryBanner}
+//             alt="Banner"
+//             className="w-[190px] sm:w-[300px] md:w-[400px] lg:w-[550px] h-auto object-contain"
+//           />
+//         </div>
+//       </div>
+
+//       {/* <nav className="p-4 sm:p-6 lg:p-10">
+//         <ul className="flex flex-wrap gap-2 justify-center sm:justify-start mx-2 sm:mx-4 lg:mx-6 text-sm sm:text-base">
+//           {["Colddriks", "Milk Products", "Water", "Coffee", "Tea"].map(
+//             (tab) => (
+//               <li
+//                 key={tab}
+//                 className={`px-4 py-2 sm:px-6 sm:py-1.5 bg-white text-black list-none border border-black rounded-lg cursor-pointer transition-colors duration-300 ${
+//                   currentPage === tab
+//                     ? "!bg-[#4CD47B] !text-white !border-none"
+//                     : "bg-white text-black border border-black"
+//                 }`}
+//                 onClick={(e) => handlePageChange(e, tab)}
+//               >
+//                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
+//               </li>
+//             )
+//           )}
+//         </ul>
+//       </nav> */}
+
+//       <div className="flex justify-center p-4 sm:p-4 md:mx-10 sm:mx-4 md:p-4 mt-10 md:mt-20">
+//         <div
+//           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full"
+//           style={{ gap: "30px" }}
+//         >
+//           {productList.length > 0 ? productList.map((product, index) => (
+//             <Link
+//               to="ProductDescription"
+//               state={{ productName: product.name }}
+//               key={index}
+//             >
+//               <div className="shadow-lg shadow-gray-400/50  w-full p-4  rounded-lg flex flex-col justify-center items-center bg-white h-[225px]">
+//                 <img
+//                   src={product.image_path}
+//                   alt={product.name}
+//                   className="w-[85px] h-[100px] sm:w-[100px] sm:h[120px] md:w-[140px] lg:w-[100px] object-fit mb-4"
+//                 />
+//                 <div className="flex flex-col items-start text-left sm:text-left w-full">
+//                   <p className="text-green-600 font-semibold text-sm sm:text-base">
+//                     {product.price}
+//                   </p>
+//                   <p className="text-gray-800  mt-2 text-sm sm:text-base line-clamp-2">
+//                     {product.name}
+//                   </p>
+//                   <p className="text-gray-600 text-sm sm:text-base"></p>
+//                 </div>
+//               </div>
+//             </Link>
+//           )) : <p>No Product Available</p>}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+// export default SubCategory;

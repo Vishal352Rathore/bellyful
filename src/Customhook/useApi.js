@@ -15,6 +15,7 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     if (!url) return; 
     fetchData();
   }, [url, method, body, token]);
+  
 
   async function fetchData() {
     const options = {
@@ -29,8 +30,11 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     try {
       const response = await fetch(url, options);
       // console.log("response" , response);
-      console.log("API Response:", data, loading, error);
-      if (!response.ok) throw new Error('Network response was not ok');
+      // console.log("API Response:", data, loading, error);
+      if (!response.ok){
+        const errorText = await response.text();
+        throw new Error(`Network response was not ok. Status: ${response.status}, Error: ${errorText}`);
+      }
       const result = await response.json();
       // console.log("result" , result);
       setData(result);
@@ -41,11 +45,7 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     }
   }
 
-
   return { data, loading, error,fetchData };
 }
 
 export default useApi;
-
-
-

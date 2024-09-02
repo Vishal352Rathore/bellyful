@@ -249,9 +249,9 @@ const AllCategoryDropdown = () => {
   const handleCategoryClick = (categoryName) => {
     if (isMobileView) {
       if (categoryName === "Household Cleaners") {
-        navigate("/category");
+        navigate("/Groceries");
       } else if (categoryName === "Grocery") {
-        navigate("/category");
+        navigate("/Groceries");
       }
       setIsDropdownOpen(false);
     }
@@ -320,7 +320,7 @@ const AllCategoryDropdown = () => {
                         <Link
                           to={
                             subcategory.sub_categories
-                              ? "category"
+                              ? ""
                               : "subcategory"
                           }
                           state={{

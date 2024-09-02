@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import logo from "../../images/belliful_logo.png";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
@@ -8,42 +8,87 @@ import LoginModal from "../LoginModel";
 import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
 import "./Header.css";
+import { useNavigate } from "react-router-dom";
+import debounce from "lodash/debounce";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-
+  // const [query, setQuery] = useState("");
+  // const [page, setPage] = useState(1);
+  // const [limit, setLimit] = useState(10);
+  // const [triggerSearch, setTriggerSearch] = useState(false);
+  // const navigate = useNavigate();
   const token = localStorage.getItem("userToken");
+
+  // Construct URL with query parameters
+  // const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
+
+  // // Use the useApi hook
+  // const { data, loading, error, fetchData } = useApi(
+  //   apiUrl,
+  //   "GET",
+  //   null,
+  //   token
+  // );
+
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
   const handleMenuItemClick = () => {
-    setIsMenuOpen(false); // Close the menu
+    setIsMenuOpen(false);
   };
 
-
-  
-
-  // Handle input change
-  // const handleInputChange = (e) => {
-  //   setSearchTerm(e.target.value);
-  // };
-
-  // // Handle search button click
-  // const handleSearchClick = () => {
-  //   if (searchTerm.trim()) {
-  //     setSearchTriggered(true);
-  //   } else {
-  //     console.warn("Search term is empty!");
-  //   }
-  // };
+  // // Debounce the search function
+  // const debouncedFetchData = useCallback(
+  //   debounce(() => {
+  //     fetchData();
+  //   }, 500), // Adjust debounce delay as needed
+  //   [fetchData]
+  // );
 
   // useEffect(() => {
-  //   if (data || error) {
-  //     setSearchTriggered(false);
+  //   if (triggerSearch) {
+  //     debouncedFetchData();
+  //     setTriggerSearch(false); // Reset trigger to avoid re-fetching
   //   }
-  // }, [data, error]);
+  // }, [triggerSearch, debouncedFetchData]);
 
+  // useEffect(() => {
+  //   if (data) {
+  //     console.log("All Product by categories:", data);
+
+  //     if (
+  //       data.status === true &&
+  //       data.items &&
+  //       Array.isArray(data.items.products) &&
+  //       data.items.products.length > 0
+  //     ) {
+  //       // Redirect to /subcategory and show products from search
+  //       navigate(`/Groceries/subcategory`, {
+  //         state: {
+  //           products: data.items.products,
+  //           categoryName: data.items.products[0].category || "Data is not", // Default if category is missing
+  //         },
+  //       });
+  //     } else {
+  //       console.warn("No products found or data structure is invalid", data);
+  //     }
+  //   }
+
+  //   if (error) {
+  //     console.error("Error:", error);
+  //   }
+  // }, [data, error, navigate]);
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (query.trim() !== "") {
+  //     setTriggerSearch(true);
+  //   } else {
+  //     console.warn("Search query is empty");
+  //   }
+  // };
   useEffect(() => {
     if (!token) {
       setModalOpen(true);
@@ -57,17 +102,10 @@ const Header = () => {
       document.body.classList.remove("no-scroll");
     }
 
-    // Clean up the class when the component is unmounted
     return () => {
       document.body.classList.remove("no-scroll");
     };
   }, [isModalOpen]);
-
-  // const handleLogout = () =>{
-  //   localStorage.removeItem("userToken");
-  //   localStorage.removeItem("userId");
-  //   window.location.reload();
-  // }
 
   const handleLogout = () => {
     const userConfirmed = window.confirm("Are you sure you want to log out?");
@@ -112,37 +150,42 @@ const Header = () => {
 
           <div className="hidden md:flex items-center space-x-8">
             <div className="relative w-[300px] md:w-[418px]">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              <form
+                // onSubmit={handleSubmit}
+                className="relative w-[300px] md:w-[418px]"
+              >
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  name="search"
+                  placeholder="Enter product name"
+                  className="p-2 pl-10 pr-14 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  // onChange={(e) => setQuery(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-auto"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="search"
-                placeholder="Enter Keyword"
-                className="p-2 pl-10 pr-14 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                // value={searchTerm}
-                // onChange={handleInputChange}
-              />
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <span
-                  // onClick={handleSearchClick}
-                  className="text-black text-base subpixel-antialiased font-semibold"
-                >
-                  Search
-                </span>
-              </div>
+                  <span className="text-black text-base subpixel-antialiased font-semibold">
+                    Search
+                  </span>
+                </button>
+              </form>
             </div>
 
             <ul className="flex space-x-8 items-center">
@@ -306,5 +349,4 @@ const Header = () => {
     </>
   );
 };
-
 export default Header;
