@@ -8,6 +8,7 @@ import LoginModal from "../LoginModel";
 import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
 import './Header.css';
+import { useAppContext } from '../../context/AppContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,6 +28,8 @@ const Header = () => {
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
 
+  const { headerState } = useAppContext();
+
   const handleMenuItemClick = () => {
     setIsMenuOpen(false); // Close the menu
   };
@@ -39,7 +42,6 @@ const Header = () => {
   }
   }, [])
   
-
   const { data, loading, error } = useApi(
     process.env.REACT_APP_GET_CATEGORY_API_URL,
     "GET",
@@ -66,6 +68,7 @@ const Header = () => {
       )
     );
   }, [subcategories]);
+
   useEffect(() => {
     if (isModalOpen) {
       document.body.classList.add("no-scroll");
@@ -79,12 +82,37 @@ const Header = () => {
     };
   }, [isModalOpen]);
 
-
   const handleLogout = () =>{
     localStorage.removeItem("userToken");
     localStorage.removeItem("userId");
     window.location.reload();
   }
+
+  const [cartItemsLength, setCartItemsLength] = useState([]);
+
+  var userId = localStorage.getItem("userId");
+
+  const { data:cartData, loading:cartLoading, error:cartError , fetchData} = useApi(
+    `${process.env.REACT_APP_GET_CART}?userId=${userId}`,
+    "GET",
+    null,
+    token
+  );
+
+  useEffect(() => {
+    fetchData()
+  }, [headerState,fetchData])
+  
+  
+  useEffect(() => {
+    if (cartData) {
+      console.log("All cart items", cartData);
+      setCartItemsLength(cartData.items.items?.length);
+    }
+    if (cartError) {
+      console.error("Error:", cartError);
+    }
+  }, [cartData, cartError]);
 
   return (
     <>
@@ -152,9 +180,12 @@ const Header = () => {
               <li>
                 <Link
                   to="Cart"
-                  className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500"
+                  className="flex items-center text-black text-base subpixel-antialiased font-semibold hover:text-green-500"
                 >
-                  <ShoppingBasketIcon className="mr-1 h-4" />
+                 <div className="relative">
+                 <p className="absolute m-0 -right-1 -top-3 w-5 h-5 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
+                 <ShoppingBasketIcon className="mr-1 h-4" />
+                  </div> 
                   Cart
                 </Link>
               </li>
@@ -247,15 +278,17 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link
-                to="Cart"
-                className="text-black text-base font-semibold hover:text-green-500 flex items-center"
-                onClick={handleMenuItemClick}
-              >
-                <ShoppingBasketIcon className="mr-1 h-4" />
-                Cart
-              </Link>
-            </li>
+                <Link
+                  to="Cart"
+                  className="flex items-center text-black text-base subpixel-antialiased font-semibold hover:text-green-500"
+                >
+                 <div className="relative">
+                 <p className="absolute m-0 right-0 -top-2 w-4 h-4 text-[11px] text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
+                 <ShoppingBasketIcon className="mr-1 h-4" />
+                  </div> 
+                  Cart
+                </Link>
+              </li>
             {/* <li>
               <button
                 onClick={() => {

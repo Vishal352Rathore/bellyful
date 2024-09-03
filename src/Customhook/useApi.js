@@ -13,34 +13,35 @@ function useApi(url, method = 'GET', body = null ,token = null) {
 
   useEffect(() => {
     if (!url) return; 
-    async function fetchData() {
-      const options = {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token && { 'token': token }), // Conditionally add Authorization header
-        },
-        body: method === 'GET' ? null : body ? JSON.stringify(body) : null,
-      };
-
-      try {
-        const response = await fetch(url, options);
-        // console.log("response" , response);
-        if (!response.ok) throw new Error('Network response was not ok');
-        const result = await response.json();
-        // console.log("result" , result);
-        setData(result);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchData();
   }, [url, method, body, token]);
 
-  return { data, loading, error };
+  async function fetchData() {
+    const options = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { 'token': token }), // Conditionally add Authorization header
+      },
+      body: method === 'GET' ? null : body ? JSON.stringify(body) : null,
+    };
+
+    try {
+      const response = await fetch(url, options);
+      // console.log("response" , response);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const result = await response.json();
+      // console.log("result" , result);
+      setData(result);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+  return { data, loading, error,fetchData };
 }
 
 export default useApi;

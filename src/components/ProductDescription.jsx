@@ -4,8 +4,20 @@ import amazon from "../images/amazon-logo.png";
 import carrefour from "../images/carrefour.png";
 import { useNavigate , useLocation } from "react-router-dom";
 import useApi from "../Customhook/useApi";
+import { useAppContext } from '../context/AppContext';
 
 const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
+
+  const { updateHeader } = useAppContext();
+
+  useEffect(() => {
+    updateHeader(true);
+
+    return () => {
+      updateHeader(false);
+    };
+  }, [updateHeader]);
+
   const stars = Array(totalStars)
     .fill(false)
     .map((_, index) => index < filledStars);

@@ -165,6 +165,15 @@ const Signup = ({ toggleForm }) => {
     return errors;
   };
 
+  const getMinDate = () => {
+    const today = new Date();
+    const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    return minDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  };
+
+  // Minimum date for the date picker
+  const minDate = getMinDate();
+
   return (
     <div className="flex flex-col items-center w-full ">
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-y-scroll md:overflow-hidden">
@@ -318,6 +327,7 @@ const Signup = ({ toggleForm }) => {
                       required
                       value={formData.dateOfBirth}
                       onChange={handleInputChange}
+                      min={minDate}
                     />
                   </div>
                 </div>
