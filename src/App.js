@@ -11,7 +11,7 @@ import DefaultLayout from "./components/DefaultLayout/DefaultLayout.jsx";
 import Faqs from "./components/Faqs.jsx";
 import Groceries from "./components/Groceries.jsx";
 import ProductDescription from "./components/ProductDescription.jsx";
-
+import Searchcategoryname from "./components/subcategory/Searchcategoryname.jsx"
 
 function App() {
   return (
@@ -24,6 +24,8 @@ function App() {
 
           <Route path="/" element={<DefaultLayout />}>
             <Route index element={<Homepage />} />
+            <Route path="searchcategoryname" element={<Searchcategoryname />}/>
+            <Route path="searchcategoryname/ProductDescription" element={<ProductDescription />}/>
             <Route path="subcategory" element={<SubCategory />} />
             <Route path="Faqs" element={<Faqs />} />
             <Route path="Groceries" element={<Groceries />} />
@@ -60,5 +62,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

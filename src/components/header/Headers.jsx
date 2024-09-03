@@ -14,23 +14,23 @@ import debounce from "lodash/debounce";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  // const [query, setQuery] = useState("");
-  // const [page, setPage] = useState(1);
-  // const [limit, setLimit] = useState(10);
-  // const [triggerSearch, setTriggerSearch] = useState(false);
-  // const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [triggerSearch, setTriggerSearch] = useState(false);
+  const navigate = useNavigate();
   const token = localStorage.getItem("userToken");
 
   // Construct URL with query parameters
-  // const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
+  const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
 
-  // // Use the useApi hook
-  // const { data, loading, error, fetchData } = useApi(
-  //   apiUrl,
-  //   "GET",
-  //   null,
-  //   token
-  // );
+  // Use the useApi hook
+  const { data, loading, error, fetchData } = useApi(
+    apiUrl,
+    "GET",
+    null,
+    token
+  );
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
@@ -39,25 +39,24 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
-  // // Debounce the search function
-  // const debouncedFetchData = useCallback(
-  //   debounce(() => {
-  //     fetchData();
-  //   }, 500), // Adjust debounce delay as needed
-  //   [fetchData]
-  // );
+  // Debounce the search function
+  const debouncedFetchData = useCallback(
+    debounce(() => {
+      fetchData();
+    }, 500), // Adjust debounce delay as needed
+    [fetchData,page,limit]
+  );
 
-  // useEffect(() => {
-  //   if (triggerSearch) {
-  //     debouncedFetchData();
-  //     setTriggerSearch(false); // Reset trigger to avoid re-fetching
-  //   }
-  // }, [triggerSearch, debouncedFetchData]);
+  useEffect(() => {
+    if (triggerSearch) {
+      debouncedFetchData();
+      setTriggerSearch(false); // Reset trigger to avoid re-fetching
+    }
+  }, [triggerSearch, debouncedFetchData]);
 
   // useEffect(() => {
   //   if (data) {
   //     console.log("All Product by categories:", data);
-
   //     if (
   //       data.status === true &&
   //       data.items &&
@@ -65,30 +64,58 @@ const Header = () => {
   //       data.items.products.length > 0
   //     ) {
   //       // Redirect to /subcategory and show products from search
-  //       navigate(`/Groceries/subcategory`, {
+  //       navigate(`/searchcategoryname`, {
   //         state: {
   //           products: data.items.products,
-  //           categoryName: data.items.products[0].category || "Data is not", // Default if category is missing
+  //           categoryName: data.items.products[0].category || "Data is not",
+  //           page, // Pass the current page number
+  //           limit, // Default if category is missing
   //         },
   //       });
   //     } else {
   //       console.warn("No products found or data structure is invalid", data);
   //     }
   //   }
+  // }, [data, error]);
 
-  //   if (error) {
-  //     console.error("Error:", error);
-  //   }
-  // }, [data, error, navigate]);
+  useEffect(() => {
+    if (data) {
+      console.log("All Product by categories:", data);
+      if (
+        data.status === true &&
+        data.items &&
+        Array.isArray(data.items.products) &&
+        data.items.products.length > 0
+      ) {
+        // Redirect to /searchcategoryname and show products from search
+        navigate(`/searchcategoryname`, {
+          state: {
+            products: data.items.products,
+            categoryName: data.items.products[0].category || "Data is not",
+            page, // Pass the current page number
+            limit, // Default if category is missing
+          },
+        });
+      } else {
+        console.warn("No products found or data structure is invalid", data);
+      }
+    }
+  }, [data, error,page,limit]);
+  
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (query.trim() !== "") {
-  //     setTriggerSearch(true);
-  //   } else {
-  //     console.warn("Search query is empty");
-  //   }
-  // };
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    setTriggerSearch(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim() !== "") {
+      setTriggerSearch(true);
+    } else {
+      console.warn("Search query is empty");
+    }
+  };
   useEffect(() => {
     if (!token) {
       setModalOpen(true);
@@ -151,7 +178,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-8">
             <div className="relative w-[300px] md:w-[418px]">
               <form
-                // onSubmit={handleSubmit}
+                onSubmit={handleSubmit}
                 className="relative w-[300px] md:w-[418px]"
               >
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -175,7 +202,7 @@ const Header = () => {
                   name="search"
                   placeholder="Enter product name"
                   className="p-2 pl-10 pr-14 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  // onChange={(e) => setQuery(e.target.value)}
+                  onChange={(e) => setQuery(e.target.value)}
                 />
                 <button
                   type="submit"
@@ -253,6 +280,7 @@ const Header = () => {
           <div className="relative mb-4 mt-8">
             <input
               type="search"
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter Keyword"
               className="p-2 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -350,3 +378,4 @@ const Header = () => {
   );
 };
 export default Header;
+
