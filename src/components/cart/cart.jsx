@@ -12,7 +12,8 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState({});
   const [removeCart, setRemoveCart] = useState(false);
-  const [refetchCart, setRefetchCart] = useState(false);
+  const { updateHeader } = useAppContext();
+
 
   var token = localStorage.getItem("userToken");
   var userId = localStorage.getItem("userId");
@@ -80,6 +81,7 @@ const Cart = () => {
       console.log("Cart updated successfully", addCartData);
       setAddCart(false);
       // setRefetchCart(true);
+      updateHeader(true);
       fetchData();
     }
     if (addCartError) {
@@ -112,6 +114,7 @@ const Cart = () => {
       console.log("Cart item deleted successfully", removeCartData);
       setRemoveCart(false); // Reset removeCart flag
       // setRefetchCart(true);
+      updateHeader(true);
       fetchData();
     } else if (removeCartError) {
       console.error("Error:", removeCartError);
@@ -129,7 +132,7 @@ const Cart = () => {
       console.error("Error:", removeCartError);
       setRemoveCart(false);
     }
-  }, [removeCartData, removeCartError,fetchData]);
+  }, [removeCartData, removeCartError]);
 
   return (
     <div className="cart px-4 lg:px-40">

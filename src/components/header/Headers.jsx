@@ -27,6 +27,8 @@ const Header = () => {
 
   const { headerState } = useAppContext();
 
+  // console.log("headerState",headerState);
+
   // const handleMenuItemClick = () => {
   //   setIsMenuOpen(false); // Close the menu
   // };
@@ -39,7 +41,7 @@ const Header = () => {
   }
   }, [])
   
-  const { data, loading, error } = useApi(
+  const { data, loading, error ,fetchData} = useApi(
     process.env.REACT_APP_GET_CATEGORY_API_URL,
     "GET",
     null,
@@ -161,7 +163,7 @@ const Header = () => {
 
   var userId = localStorage.getItem("userId");
 
-  const { data:cartData, loading:cartLoading, error:cartError , fetchData} = useApi(
+  const { data:cartData, loading:cartLoading, error:cartError , fetchData : cartFetch} = useApi(
     `${process.env.REACT_APP_GET_CART}?userId=${userId}`,
     "GET",
     null,
@@ -169,9 +171,8 @@ const Header = () => {
   );
 
   useEffect(() => {
-    fetchData()
-  }, [headerState,fetchData])
-  
+    cartFetch()
+  }, [headerState])
   
   useEffect(() => {
     if (cartData) {
