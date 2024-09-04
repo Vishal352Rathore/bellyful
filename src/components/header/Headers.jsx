@@ -9,6 +9,7 @@ import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 import debounce from "lodash/debounce";
 
 const Header = () => {
