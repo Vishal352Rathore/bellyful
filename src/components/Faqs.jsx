@@ -44,11 +44,11 @@ const Faqs = () => {
         {faqItems.map((item, index) => (
           <div
             key={index}
-            className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg shadow-md"
+            className="w-full max-w-4xl bg-white text-black border border-gray-200 rounded-lg shadow-md"
           >
             <div
               className={`flex items-center justify-between p-4 cursor-pointer ${
-                expandedIndex === index ? "bg-gray-100 dark:bg-gray-700" : ""
+                expandedIndex === index ? "bg-gray-100 text-black" : ""
               }`}
               onClick={() => handleToggle(index)}
             >

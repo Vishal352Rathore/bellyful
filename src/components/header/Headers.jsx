@@ -323,8 +323,12 @@ const Header = () => {
                 className="text-black text-base font-semibold hover:text-green-500 flex items-center"
                 onClick={handleMenuItemClick}
               >
+                <div className="relative">
+                <p className="absolute left-3 -top-2 w-4 h-4 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
                 <ShoppingBasketIcon className="mr-1 h-4" />
                 Cart
+                </div>
+                
               </Link>
             </li>
             <li className="flex items-center space-x-1">
