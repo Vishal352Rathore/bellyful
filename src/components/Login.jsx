@@ -28,7 +28,18 @@ const Login = ({ toggleForm, setModalOpen }) => {
     const { name, value } = e.target;
     setPostData((prevData) => ({ ...prevData, [name]: value }));
   };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   // Remove all spaces from the input value
+  //   const formattedValue = value.replace(/\s+/g, '');
+  //   setPostData((prevData) => ({ ...prevData, [name]: formattedValue }));
+  // };
 
+  const handleKeyDown = (e) => {
+    if (e.key === " ") {
+      e.preventDefault(); // Prevent the space character from being entered
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +50,6 @@ const Login = ({ toggleForm, setModalOpen }) => {
       setTriggerApiCall(true); // Trigger the API call
     }
   };
-
 
   // useEffect(() => {
   //   if (data?.status === false && data.message) {
@@ -66,24 +76,24 @@ const Login = ({ toggleForm, setModalOpen }) => {
   //     setTriggerApiCall(false); // Reset to avoid multiple hits
   //   }
   // }, [data, error]);
-  
+
   useEffect(() => {
     if (data?.status === false && data.message) {
-        if (data.message.includes('email')) {
+      if (data.message.includes("email")) {
         // Customize error handling if API provides specific messages
         setErrors({
           email: "This email doesn't exist. Please double-check your email",
-          password: ""
+          password: "",
         });
-      } else if (data.message.includes('password')) {
+      } else if (data.message.includes("password")) {
         setErrors({
           email: "",
-          password: "Invalid password"
+          password: "Invalid password",
         });
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          api: data.message
+          api: data.message,
         }));
       }
       setTriggerApiCall(false); // Reset to avoid multiple hits
@@ -101,31 +111,30 @@ const Login = ({ toggleForm, setModalOpen }) => {
       console.error("Error:", error);
       setErrors((prevErrors) => ({
         ...prevErrors,
-        api: "An unexpected error occurred. Please try again."
+        api: "An unexpected error occurred. Please try again.",
       }));
       setTriggerApiCall(false); // Reset to avoid multiple hits
     }
   }, [data, error]);
-  
+
   const validateForm = () => {
     const errors = {};
     const passwordRegex = /^.{6,10}$/;
-  
+
     if (!postData.email.trim()) {
       errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)) {
       errors.email = "Write Valid Email Address";
     }
-  
+
     if (!postData.password) {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(postData.password)) {
       errors.password = "Password must be between 6 to 10 characters";
     }
-  
+
     return errors;
   };
-  
 
   return (
     <div className="flex h-full w-full items-center justify-center md:p-0">
@@ -153,6 +162,7 @@ const Login = ({ toggleForm, setModalOpen }) => {
                 name="email"
                 placeholder="Enter Your address"
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 required
               />
               {errors.api && (
@@ -172,7 +182,10 @@ const Login = ({ toggleForm, setModalOpen }) => {
                 className="h-8 px-4 border rounded-lg border-gray-300 w-full pr-10" // Add some padding to the right for the icon
                 name="password"
                 placeholder="Enter Your Password"
+                minLength="6"
+                maxLength="12"
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 required
               />
               <span

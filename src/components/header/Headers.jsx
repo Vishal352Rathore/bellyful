@@ -3,7 +3,7 @@ import logo from "../../images/belliful_logo.png";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import DehazeIcon from "@mui/icons-material/Dehaze";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import LoginModal from "../LoginModel";
 import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
@@ -17,11 +17,11 @@ const Header = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
   const [triggerSearch, setTriggerSearch] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("userToken");
-
+ const location = useLocation();
   // Construct URL with query parameters
   const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
 
@@ -65,35 +65,11 @@ const Header = () => {
 
   useEffect(() => {
     if (triggerSearch) {
-      debouncedFetchData();
+      debouncedFetchData(); // Fetch data based on the current page and query
       setTriggerSearch(false); // Reset trigger to avoid re-fetching
     }
   }, [triggerSearch, debouncedFetchData]);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     console.log("All Product by categories:", data);
-  //     if (
-  //       data.status === true &&
-  //       data.items &&
-  //       Array.isArray(data.items.products) &&
-  //       data.items.products.length > 0
-  //     ) {
-  //       // Redirect to /subcategory and show products from search
-  //       navigate(`/searchcategoryname`, {
-  //         state: {
-  //           products: data.items.products,
-  //           categoryName: data.items.products[0].category || "Data is not",
-  //           page, // Pass the current page number
-  //           limit, // Default if category is missing
-  //         },
-  //       });
-  //     } else {
-  //       console.warn("No products found or data structure is invalid", data);
-  //     }
-  //   }
-  // }, [data, error]);
-
+  
   useEffect(() => {
     if (data) {
       console.log("All Product by categories:", data);
@@ -103,26 +79,28 @@ const Header = () => {
         Array.isArray(data.items.products) &&
         data.items.products.length > 0
       ) {
-        // Redirect to /searchcategoryname and show products from search
+        // Redirect to /searchcategoryname and pass the products, category name, page, and limit
         navigate(`/searchcategoryname`, {
           state: {
             products: data.items.products,
             categoryName: data.items.products[0].category || "Data is not",
             page, // Pass the current page number
-            limit, // Default if category is missing
+            limit, // Pass the limit per page
           },
         });
       } else {
         console.warn("No products found or data structure is invalid", data);
       }
     }
-  }, [data, error,page,limit]);
+  }, [data, error, page, limit]);
+  
   
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
-    setTriggerSearch(true);
+    setTriggerSearch(true); // Trigger the search on page change
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -320,16 +298,6 @@ const Header = () => {
               </svg>
             </button>
           </div>
-
-          <div className="relative mb-4 mt-8">
-            <input
-              type="search"
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Enter Keyword"
-              className="p-2 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
           <ul className="flex flex-col space-y-4">
             <li>
               <Link
@@ -378,7 +346,7 @@ const Header = () => {
       {/* Bottom Navigation */}
       <div className="bg-green-900 text-white">
         <div className="flex items-center justify-between h-10 max-w-screen-xxl mx-auto px-4 md:px-12">
-          <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
+        <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
             <AllCategoryDropdown />
           </div>
 
