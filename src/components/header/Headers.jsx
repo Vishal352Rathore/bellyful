@@ -9,6 +9,7 @@ import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 import debounce from "lodash/debounce";
 
 const Header = () => {
@@ -24,9 +25,24 @@ const Header = () => {
   // Construct URL with query parameters
   const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
 
-  // Use the useApi hook
-  const { data, loading, error, fetchData } = useApi(
-    apiUrl,
+  const { headerState } = useAppContext();
+
+  // console.log("headerState",headerState);
+
+  // const handleMenuItemClick = () => {
+  //   setIsMenuOpen(false); // Close the menu
+  // };
+
+  // var token = localStorage.getItem("userToken");
+
+  useEffect(() => {
+  if(!token){
+    setModalOpen(true);
+  }
+  }, [])
+  
+  const { data, loading, error ,fetchData} = useApi(
+    process.env.REACT_APP_GET_CATEGORY_API_URL,
     "GET",
     null,
     token
@@ -119,6 +135,31 @@ const Header = () => {
     }
   };
 
+  const [cartItemsLength, setCartItemsLength] = useState([]);
+
+  var userId = localStorage.getItem("userId");
+
+  const { data:cartData, loading:cartLoading, error:cartError , fetchData : cartFetch} = useApi(
+    `${process.env.REACT_APP_GET_CART}?userId=${userId}`,
+    "GET",
+    null,
+    token
+  );
+
+  useEffect(() => {
+    cartFetch()
+  }, [headerState])
+  
+  useEffect(() => {
+    if (cartData) {
+      console.log("All cart items", cartData);
+      setCartItemsLength(cartData.items.items?.length);
+    }
+    if (cartError) {
+      console.error("Error:", cartError);
+    }
+  }, [cartData, cartError]);
+
   return (
     <>
       {/* Main Header */}
@@ -196,9 +237,12 @@ const Header = () => {
               <li>
                 <Link
                   to="Cart"
-                  className="text-black text-base subpixel-antialiased font-semibold hover:text-green-500"
+                  className="flex items-center text-black text-base subpixel-antialiased font-semibold hover:text-green-500"
                 >
-                  <ShoppingBasketIcon className="mr-1 h-4" />
+                 <div className="relative">
+                 <p className="absolute m-0 -right-1 -top-3 w-5 h-5 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
+                 <ShoppingBasketIcon className="mr-1 h-4" />
+                  </div> 
                   Cart
                 </Link>
               </li>
@@ -272,23 +316,18 @@ const Header = () => {
                 FAQ
               </Link>
             </li>
-            {/* <li>
-              <Link
-                to="subcategory"
-                className="text-black text-base font-semibold hover:text-green-500 flex items-center"
-                onClick={handleMenuItemClick}
-              >
-                Supermarket
-              </Link>
-            </li> */}
             <li>
               <Link
                 to="Cart"
                 className="text-black text-base font-semibold hover:text-green-500 flex items-center"
                 onClick={handleMenuItemClick}
               >
+                <div className="relative">
+                <p className="absolute left-3 -top-2 w-4 h-4 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
                 <ShoppingBasketIcon className="mr-1 h-4" />
                 Cart
+                </div>
+                
               </Link>
             </li>
             <li className="flex items-center space-x-1">
@@ -363,15 +402,13 @@ const Header = () => {
                   FAQ
                 </Link>
               </li>
-              {/* <li>
-                <Link to="subcategory" className="block hover:text-lime-200">
-                  Supermarket
-                </Link>
-              </li> */}
             </ul>
           </div>
+
         </div>
-      </div>
+        </div>
+
+     
     </>
   );
 };

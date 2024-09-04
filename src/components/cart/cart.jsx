@@ -6,12 +6,14 @@ import amazonShortLogo from "../../images/Amazon_short_logo.png";
 import carreFourLogo from "../../images/Carrefour_logo.png";
 import removeCartImage from "../../images/RemoveCart.png";
 import useApi from "../../Customhook/useApi";
+import { useAppContext } from '../../context/AppContext';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [cartTotal, setCartTotal] = useState({});
   const [removeCart, setRemoveCart] = useState(false);
-  const [refetchCart, setRefetchCart] = useState(false);
+  const { updateHeader } = useAppContext();
+
 
   var token = localStorage.getItem("userToken");
   var userId = localStorage.getItem("userId");
@@ -25,8 +27,7 @@ const Cart = () => {
   
 
   useEffect(() => {
-    console.log("refetchCart ==========")
-    if (data) {
+    if (!loading && data) {
       console.log("All cart items", data);
       setCartTotal(data.items);
       setCartItems(data.items.items);
@@ -34,7 +35,7 @@ const Cart = () => {
     if (error) {
       console.error("Error:", error);
     }
-  }, [data, error, refetchCart]);
+  }, [data, loading ,error]);
 
   const [addCart, setAddCart] = useState(false);
   const [postData, setPostData] = useState({
@@ -80,6 +81,7 @@ const Cart = () => {
       console.log("Cart updated successfully", addCartData);
       setAddCart(false);
       // setRefetchCart(true);
+      updateHeader(true);
       fetchData();
     }
     if (addCartError) {
@@ -94,7 +96,6 @@ const Cart = () => {
       ...prevState,
       productId: productId,
     }));
-    console.log("setRemoveCart");
   };
 
   const {
@@ -113,6 +114,7 @@ const Cart = () => {
       console.log("Cart item deleted successfully", removeCartData);
       setRemoveCart(false); // Reset removeCart flag
       // setRefetchCart(true);
+      updateHeader(true);
       fetchData();
     } else if (removeCartError) {
       console.error("Error:", removeCartError);
@@ -121,10 +123,16 @@ const Cart = () => {
   }, [removeCartData, removeCartError]);
 
   useEffect(() => {
-    if (!loading && !error) {
-      setRefetchCart(false);
+    // console.log("App Context from cart remove",headerState)
+    if (removeCartData?.status) {
+      console.log("Cart item deleted successfully", removeCartData);
+      setRemoveCart(false);
+      fetchData();
+    } else if (removeCartError) { 
+      console.error("Error:", removeCartError);
+      setRemoveCart(false);
     }
-  }, [loading, error]);
+  }, [removeCartData, removeCartError]);
 
   return (
     <div className="cart px-4 lg:px-40">
@@ -191,9 +199,9 @@ const Cart = () => {
                 <p className="text-[15px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
                   {items?.amazonPrice}
                 </p>
-                <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
+                {/* <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
                   5 liter
-                </p>
+                </p> */}
               </div>
               <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-white w-[125px] md:w-1/6 sm:w-1/3">
                 <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-tight">
@@ -202,9 +210,9 @@ const Cart = () => {
                 <p className="text-[15px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
                   {items?.carrefourPrice || "NA"}
                 </p>
-                <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
+                {/* <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
                   5 liter
-                </p>
+                </p> */}
               </div>
             </div>
           ))}

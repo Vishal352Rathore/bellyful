@@ -30,11 +30,7 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     try {
       const response = await fetch(url, options);
       // console.log("response" , response);
-      // console.log("API Response:", data, loading, error);
-      if (!response.ok){
-        const errorText = await response.text();
-        throw new Error(`Network response was not ok. Status: ${response.status}, Error: ${errorText}`);
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
       const result = await response.json();
       // console.log("result" , result);
       setData(result);

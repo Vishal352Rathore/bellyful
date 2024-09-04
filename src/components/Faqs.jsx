@@ -44,15 +44,15 @@ const Faqs = () => {
         {faqItems.map((item, index) => (
           <div
             key={index}
-            className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg shadow-md"
+            className="w-full max-w-4xl bg-white text-black border border-gray-200 rounded-lg shadow-md"
           >
             <div
               className={`flex items-center justify-between p-4 cursor-pointer ${
-                expandedIndex === index ? "bg-gray-100 dark:bg-gray-700" : ""
+                expandedIndex === index ? "bg-gray-100 text-black" : ""
               }`}
               onClick={() => handleToggle(index)}
             >
-              <h5 className="text-lg font-bold text-gray-900 dark:text-white">
+              <h5 className="text-lg font-bold text-black">
                 {item.question}
               </h5>
               <button className="text-black">
@@ -64,7 +64,7 @@ const Faqs = () => {
                 expandedIndex === index ? "max-h-[500px] p-4" : "max-h-0"
               }`}
             >
-              <p className="font-normal text-black dark:text-white">
+              <p className="font-normal text-black">
                 {item.answer}
               </p>
             </div>
