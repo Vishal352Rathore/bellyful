@@ -20,7 +20,7 @@ const Header = () => {
   const [triggerSearch, setTriggerSearch] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("userToken");
- const location = useLocation();
+  const location = useLocation();
   // Construct URL with query parameters
   const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
 
@@ -44,7 +44,7 @@ const Header = () => {
     debounce(() => {
       fetchData();
     }, 500), // Adjust debounce delay as needed
-    [fetchData,page,limit]
+    [fetchData, page, limit]
   );
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Header = () => {
       setTriggerSearch(false); // Reset trigger to avoid re-fetching
     }
   }, [triggerSearch, debouncedFetchData]);
-  
+
   useEffect(() => {
     if (data) {
       console.log("All Product by categories:", data);
@@ -77,14 +77,11 @@ const Header = () => {
       }
     }
   }, [data, error, page, limit]);
-  
-  
 
   const handlePageChange = (newPage) => {
     setPage(newPage);
     setTriggerSearch(true); // Trigger the search on page change
   };
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -94,6 +91,7 @@ const Header = () => {
       console.warn("Search query is empty");
     }
   };
+
   useEffect(() => {
     if (!token) {
       setModalOpen(true);
@@ -179,7 +177,8 @@ const Header = () => {
                   type="search"
                   name="search"
                   placeholder="Enter product name"
-                  className="p-2 pl-10 pr-14 border border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={query}
+                  className="p-2 pl-10 pr-14 border text-black sm:text-black border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                   onChange={(e) => setQuery(e.target.value)}
                 />
                 <button
@@ -311,14 +310,46 @@ const Header = () => {
       {/* Bottom Navigation */}
       <div className="bg-green-900 text-white">
         <div className="flex items-center justify-between h-10 max-w-screen-xxl mx-auto px-4 md:px-12">
-        <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
+          {/* <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
             <AllCategoryDropdown />
-            </div>      
-            {/* <p className="text-sm font-semibold text-amber-50 w-full h-full flex items-center justify-center">
-              <DehazeIcon className="mr-1" />
-              All Category
-            </p>
-            <Dropdown categories={categories} /> */}
+            </div>       */}
+          <div className="flex items-center bg-lime-300 h-[29px] w-full border border-lime-200 rounded-full md:hidden">
+            <form onSubmit={handleSubmit} className="relative w-full">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg
+            className="w-5 h-5 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+            />
+          </svg>
+        </div>
+        <input
+                  type="search"
+                  name="search"
+                  placeholder="Enter product name"
+                  className="p-2 pl-10 pr-14 border text-black sm:text-black border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+        <button
+          type="submit"
+          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+        >
+          <span className="text-black text-base font-semibold">Search</span>
+        </button>
+      </form>
+          </div>
+          {/* All Category Dropdown for Medium and Larger Screens */}
+          <div className="hidden md:flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
+            <AllCategoryDropdown />
+          </div>
 
           <div className="hidden md:flex items-center text-base space-x-8">
             <ul className="flex space-x-12 items-center">
@@ -345,4 +376,3 @@ const Header = () => {
   );
 };
 export default Header;
-

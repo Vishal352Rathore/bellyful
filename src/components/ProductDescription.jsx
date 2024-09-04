@@ -447,7 +447,7 @@ const ProductDescription = ({ filledStars = 4, totalStars = 5 }) => {
               <p className="flex items-center rounded-lg shadow-md w-full lg:w-[615px] h-[40px] border border-[#DADADA] text-black justify-between mt-4">
                 <img src={amazon} alt="" className="w-[50px] h-[25px]" />
                 <span className="pr-2 text-lg text-base font-semibold text-[#6CBD44]">
-                  ${totalAmazonPrice.toFixed(2)}
+                  AED {totalAmazonPrice.toFixed(2)}
                 </span>
               </p>
             </div>

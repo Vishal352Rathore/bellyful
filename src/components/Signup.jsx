@@ -73,7 +73,7 @@ const Signup = ({ toggleForm }) => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
   const [userExistsError, setUserExistsError] = useState(false);
-  const [apiError, setApiError] = useState("");
+  // const [apiError, setApiError] = useState("");
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
@@ -91,11 +91,11 @@ const Signup = ({ toggleForm }) => {
           const { errorName, message } = data.message;
 
           if (errorName === "duplicateUser") {
-            errorMessage = "User Already Exists";
+            errorMessage = "User Already Exists !";
             setErrors({
-              email: message.includes("Email") ? "User Already Exists" : "",
+              email: message.includes("Email") ? "User Already Exists !" : "",
               mobileNumber: message.includes("mobile")
-                ? "User Already Exists"
+                ? "User Already Exists !"
                 : "",
             });
             setSubmitForm(false); // Prevent form submission
@@ -167,20 +167,19 @@ const Signup = ({ toggleForm }) => {
       e.preventDefault(); // Prevent the space character from being entered
     }
   };
-const handlemobilenum =(e) =>{
-  const { key } = e;
-  if (
-    key !== "Backspace" &&
-    key !== "Delete" &&
-    key !== "ArrowLeft" &&
-    key !== "ArrowRight" &&
-    key !== "Tab" && // Allow Tab key for navigation
-    !/^[0-9]$/.test(key)
-
-  ) {
-    e.preventDefault();
-  }
-}
+  const handlemobilenum = (e) => {
+    const { key } = e;
+    if (
+      key !== "Backspace" &&
+      key !== "Delete" &&
+      key !== "ArrowLeft" &&
+      key !== "ArrowRight" &&
+      key !== "Tab" && // Allow Tab key for navigation
+      !/^[0-9]$/.test(key)
+    ) {
+      e.preventDefault();
+    }
+  };
   useEffect(() => {
     console.log("API Response:", data);
     // Rest of the code...
@@ -257,7 +256,7 @@ const handlemobilenum =(e) =>{
   return (
     <div className="flex flex-col items-center w-full ">
       <div className="flex flex-col md:flex-row w-full h-full rounded-2xl bg-white border overflow-y-scroll md:overflow-hidden">
-        <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8">
+        <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-4">
           <img src={logo} alt="Logo" className="w-[200px] h-[58px] mb-4 " />
           <div className="w-full mt-4 mx-auto">
             {isRagisterd ? (
@@ -306,7 +305,7 @@ const handlemobilenum =(e) =>{
                     onKeyDown={handleKeyDown}
                   />
                 </div>
-                <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8 ">
+                <div className="flex flex-col md:flex-row md:space-x-4 md:mt-4 ">
                   <div className="flex flex-col md:w-[48%] w-full">
                     <label
                       htmlFor={"mobile-number"}
@@ -318,7 +317,7 @@ const handlemobilenum =(e) =>{
                       <select
                         id="country-code"
                         name="countryCode"
-                        className="h-[30px] w-[18%] md:w-[25%] "
+                        className="h-[30px] w-[23%] md:w-[35%]"
                         value={formData.countryCode}
                         onChange={handleCountryCodeChange}
                         required
@@ -378,7 +377,7 @@ const handlemobilenum =(e) =>{
                   </div>
                 </div>
 
-                <div className="flex flex-col relative md:flex-row md:space-x-4 md:mt-8">
+                <div className="flex flex-col relative md:flex-row md:space-x-4 md:mt-4">
                   <div className="flex flex-col md:w-[48%] w-full relative">
                     <label
                       htmlFor="password"
@@ -444,7 +443,7 @@ const handlemobilenum =(e) =>{
                     )}
                   </div>
                 </div>
-                <div className="flex flex-col md:flex-row md:space-x-4 md:mt-8">
+                <div className="flex flex-col md:flex-row md:space-x-4 md:mt-4">
                   <div className="flex flex-col md:w-[48%] w-full">
                     <label
                       htmlFor="nationality"
@@ -491,9 +490,9 @@ const handlemobilenum =(e) =>{
                     />
                   </div>
                 </div>
-                <div className="flex flex-col mt-8 items-center">
+                <div className="flex flex-col mt-4 items-center">
                   {errors.api && (
-                    <p className="text-red-500 text-lg pb-4 items-center">
+                    <p className="text-red-500 text-md pb-4 items-center">
                       {errors.api}
                     </p>
                   )}
@@ -504,19 +503,19 @@ const handlemobilenum =(e) =>{
                   >
                     Register
                   </button>
-                  {apiError && <p className="text-red-500 mt-2">{apiError}</p>}
+                  {/* {apiError && <p className="text-red-500 mt-2">{apiError}</p>} */}
                 </div>
               </form>
             )}
 
-            {!data && (
+            {
               <>
-                <div className="flex items-center text-center my-4">
+                <div className="flex items-center text-center my-2">
                   <div className="flex-grow border-t border-gray-300"></div>
                   <span className="mx-4 text-gray-600">OR</span>
                   <div className="flex-grow border-t border-gray-300"></div>
                 </div>
-                <div className="flex justify-center items-center mb-4">
+                <div className="flex justify-center items-center mb-2">
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Avatar
                       alt="google"
@@ -530,7 +529,7 @@ const handlemobilenum =(e) =>{
                     />
                   </Stack>
                 </div>
-                <div className="flex justify-center items-center pt-4">
+                <div className="flex justify-center items-center pt-2">
                   <p className="text-sm font-semibold">
                     Already have an account?{" "}
                     <span
@@ -542,7 +541,7 @@ const handlemobilenum =(e) =>{
                   </p>
                 </div>
               </>
-            )}
+            }
           </div>
         </div>
         <div
