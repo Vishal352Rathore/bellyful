@@ -94,7 +94,6 @@ const Header = () => {
       console.warn("Search query is empty");
     }
   };
-  
   useEffect(() => {
     if (!token) {
       setModalOpen(true);
@@ -312,17 +311,14 @@ const Header = () => {
       {/* Bottom Navigation */}
       <div className="bg-green-900 text-white">
         <div className="flex items-center justify-between h-10 max-w-screen-xxl mx-auto px-4 md:px-12">
-        <div className="relative mb-4 mt-8">
-           <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
+        <div className="flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
             <AllCategoryDropdown />
-            </div>
-
+            </div>      
             {/* <p className="text-sm font-semibold text-amber-50 w-full h-full flex items-center justify-center">
               <DehazeIcon className="mr-1" />
               All Category
             </p>
             <Dropdown categories={categories} /> */}
-          </div>  
 
           <div className="hidden md:flex items-center text-base space-x-8">
             <ul className="flex space-x-12 items-center">
