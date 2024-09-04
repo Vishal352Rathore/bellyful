@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../images/image 1.png";
 import closeup from "../images/close-up.png";
 import google from "../images/google.png";
@@ -6,13 +6,20 @@ import facebook from "../images/facebook.png";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import useApi from "../Customhook/useApi";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-const Login = ({ toggleForm ,setModalOpen}) => {
+const Login = ({ toggleForm, setModalOpen }) => {
   const [postData, setPostData] = useState({ email: "", password: "" });
   const [triggerApiCall, setTriggerApiCall] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevState) => !prevState);
+  };
 
   const { data, loading, error } = useApi(
-    triggerApiCall ?  process.env.REACT_APP_LOGININ_API_URL : null,
+    triggerApiCall ? process.env.REACT_APP_LOGININ_API_URL : null,
     "POST",
     triggerApiCall ? postData : null
   );
@@ -22,22 +29,103 @@ const Login = ({ toggleForm ,setModalOpen}) => {
     setPostData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTriggerApiCall(true);
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      setTriggerApiCall(true); // Trigger the API call
+    }
   };
 
+
+  // useEffect(() => {
+  //   if (data?.status === false && data.message) {
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       api: data.message
+  //     }));
+  //     setTriggerApiCall(false); // Reset to avoid multiple hits
+  //   } else if (data?.status === true) {
+  //     setErrors({});
+  //     console.log("Login successful:", data);
+  //     localStorage.setItem("userToken", data.items.token);
+  //     localStorage.setItem("userId", data.items.userId);
+  //     alert("Login Successfully");
+  //     setModalOpen(false);
+  //     setTriggerApiCall(false); // Reset to avoid multiple hits
+  //   }
+  //   if (error) {
+  //     console.error("Error:", error);
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       api: "An unexpected error occurred. Please try again."
+  //     }));
+  //     setTriggerApiCall(false); // Reset to avoid multiple hits
+  //   }
+  // }, [data, error]);
+  
   useEffect(() => {
-    if (data?.status) {
+    if (data?.status === false && data.message) {
+        if (data.message.includes('email')) {
+        // Customize error handling if API provides specific messages
+        setErrors({
+          email: "This email doesn't exist. Please double-check your email",
+          password: ""
+        });
+      } else if (data.message.includes('password')) {
+        setErrors({
+          email: "",
+          password: "Invalid password"
+        });
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          api: data.message
+        }));
+      }
+      setTriggerApiCall(false); // Reset to avoid multiple hits
+    } else if (data?.status === true) {
+      // API returned success
+      setErrors({});
       console.log("Login successful:", data);
-      localStorage.setItem("userToken",data.items.token);
-      localStorage.setItem("userId",data.items.userId)
+      localStorage.setItem("userToken", data.items.token);
+      localStorage.setItem("userId", data.items.userId);
+      alert("Login Successfully");
       setModalOpen(false);
+      setTriggerApiCall(false); // Reset to avoid multiple hits
     }
     if (error) {
       console.error("Error:", error);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        api: "An unexpected error occurred. Please try again."
+      }));
+      setTriggerApiCall(false); // Reset to avoid multiple hits
     }
   }, [data, error]);
+  
+  const validateForm = () => {
+    const errors = {};
+    const passwordRegex = /^.{6,10}$/;
+  
+    if (!postData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(postData.email)) {
+      errors.email = "Write Valid Email Address";
+    }
+  
+    if (!postData.password) {
+      errors.password = "Password is required";
+    } else if (!passwordRegex.test(postData.password)) {
+      errors.password = "Password must be between 6 to 10 characters";
+    }
+  
+    return errors;
+  };
+  
 
   return (
     <div className="flex h-full w-full items-center justify-center md:p-0">
@@ -61,31 +149,49 @@ const Login = ({ toggleForm ,setModalOpen}) => {
               <input
                 id="email"
                 type="text"
-                className="h-8 w-[407px] px-4 border rounded-lg border-gray-300"
+                className="h-8  px-4 border rounded-lg border-gray-300"
                 name="email"
                 placeholder="Enter Your address"
                 onChange={handleChange}
                 required
               />
+              {errors.api && (
+                <p className="text-red-500 text-sm mt-2">{errors.api}</p>
+              )}
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
             </div>
-            <div className="flex flex-col mt-4 ">
+            <div className="flex flex-col mt-4 relative">
               <label className="text-black font-bold text-sm md:text-base">
                 Password:
               </label>
               <input
                 id="password"
-                type="password"
-                className="h-8 w-[407px] px-4 border rounded-lg border-gray-300"
+                type={isPasswordVisible ? "text" : "password"}
+                className="h-8 px-4 border rounded-lg border-gray-300 w-full pr-10" // Add some padding to the right for the icon
                 name="password"
                 placeholder="Enter Your Password"
                 onChange={handleChange}
                 required
               />
+              <span
+                className="absolute right-2 top-9 sm:top-10 transform -translate-y-1/2 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {isPasswordVisible ? <FaEye /> : <FaEyeSlash />}
+              </span>
+              {errors.password && (
+                <p className="text-red-500 text-sm">{errors.password}</p>
+              )}
+              {errors.api && (
+                <p className="text-red-500 text-sm mt-2">{errors.api}</p>
+              )}
             </div>
             <div className="flex flex-col mt-6">
               <button
                 type="submit"
-                className="h-8 w-[407px] bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg"
+                className="h-8 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg"
                 onSubmit={handleSubmit}
               >
                 Login

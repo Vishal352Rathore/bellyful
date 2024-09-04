@@ -39,11 +39,11 @@ const Homepage = () => {
       </div>
 
       <div className="relative h-auto w-full p-5 md:p-10">
-        <div className="flex flex-col md:flex-row justify-between items-center py-8 px-8 md:py-12 md:px-12">
+        <div className="flex flex-col md:flex-row justify-between items-center py-4 px-8 md:py-8 md:px-12">
           <p className="text-2xl md:text-3xl text-black font-semibold">
             Shop by Store
           </p>
-          <div className="relative mt-5 md:mt-0">
+          <div className="relative mt-2 md:mt-0">
             <input
               type="search"
               placeholder="Academic City"
@@ -57,7 +57,7 @@ const Homepage = () => {
         </div>
 
         <div className="flex flex-col justify-center md:flex-row gap-5 md:gap-10">
-          <Link to="Groceries">
+          <Link to="Groceries" state={{category:"house_hold"}}>
             <div className="bg-household-cleaners-gradient relative flex justify-center items-center md:p-10  p-5 w-full md:w-[44vw] h-auto border rounded-xl">
               <div className="text-center">
                 <div className=" mb-5 text-lg md:text-xl text-black font-semibold">
@@ -71,7 +71,7 @@ const Homepage = () => {
               </div>
             </div>
           </Link>
-          <Link to="Groceries">
+          <Link to="Groceries" state={{category:"groceries"}}>
             <div className="bg-grocery-gradient relative flex justify-center items-center p-5 md:p-10 w-full md:w-[44vw] h-auto border rounded-xl">
               <div className="text-center">
                 <div className="mb-5  text-lg md:text-xl text-black font-semibold">

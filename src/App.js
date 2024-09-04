@@ -12,6 +12,7 @@ import Faqs from "./components/Faqs.jsx";
 import Groceries from "./components/Groceries.jsx";
 import ProductDescription from "./components/ProductDescription.jsx";
 import { AppProvider } from "./context/AppContext";
+import Searchcategoryname from "./components/subcategory/Searchcategoryname.jsx"
 
 function App() {
   return (
@@ -62,5 +63,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

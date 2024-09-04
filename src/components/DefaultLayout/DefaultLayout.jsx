@@ -5,7 +5,7 @@ import Footer from '../footer/Footer'
 
 const DefaultLayout = () => {
   return (
-    <div>
+    <div >
         <Header/>
         <Outlet/>
         <Footer/>

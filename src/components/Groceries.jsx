@@ -5,41 +5,45 @@ import backgrountblue from "../images/empty-studio-blue.png";
 import pngitem from "../images/Pngitem.png";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Link, useLocation } from "react-router-dom";
-import beverage1 from "../images/assorted-beverage-1.png";
-import beverage2 from "../images/assorted-beverage-2.png";
-import beverage3 from "../images/assorted-beverage-3.png";
-import beverage4 from "../images/assorted-beverage-4.png";
+import defaultImage from "../images/assorted-beverage-1.png";
 
 const Groceries = () => {
   const location = useLocation();
+  console.log("location", location);
+  const { category } = location?.state || "house_hold";
 
   const [subcategories, setSubcategories] = useState([]);
 
-  const [isSubcategory, setIsSubcategory] = useState(false);
+  // const [isSubcategory, setIsSubcategory] = useState(false);
 
   var token = localStorage.getItem("userToken");
 
   const { data, loading, error } = useApi(
-    process.env.REACT_APP_GET_CATEGORY_API_URL,
+    `${process.env.REACT_APP_GET_CATEGORY_API_URL}?category=${category}`,
     "GET",
     null,
     token
   );
 
+
   useEffect(() => {
     if (data) {
       console.log("All Subcategories", data);
-      if(location.pathname === "/Groceries/category"){
-        setSubcategories(data.categories[location.state.index].sub_categories);
+      if (location.pathname === "/Groceries/category") {
+        const fetchedSubcategories = data.categories[location.state.index]?.sub_categories;
+        if (fetchedSubcategories && fetchedSubcategories.length > 0) {
+          setSubcategories(fetchedSubcategories);
+        }
+        // setSubcategories(data.categories[location.state.index]?.sub_categories);
       }
-      if(location.pathname === "/Groceries"){
+      if (location.pathname === "/Groceries") {
         setSubcategories(data.categories);
       }
     }
     if (error) {
       console.error("Error:", error);
     }
-  }, [location,data, error]);
+  }, [location, data, error]);
 
   return (
     <>
@@ -84,39 +88,43 @@ const Groceries = () => {
           />
         </div>
       </div>
-
-      <div className="flex justify-center p-4 md:p-8">
+      <div className="flex justify-center p-4 md:mx-10 sm:mx-4 md:p-4 ">
         <div
-          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full"
           style={{ gap: "30px" }}
         >
           {subcategories?.map((subcategory, index) => (
             <Link
-              to={subcategory.sub_categories ?  "category" : "subcategory"}
+              to={subcategory.sub_categories ? "category" : "subcategory"}
               state={{
                 categoryName: subcategory.name,
-                isSubcategory: isSubcategory,
-                index : index
+                category : category ,
+                // isSubcategory: isSubcategory,
+                index: index,
               }}
               onClick={() => {
                 if (subcategory.sub_categories) {
                   setSubcategories(subcategory.sub_categories);
-                  setIsSubcategory(true);
+                  // setIsSubcategory(true);
                 }
               }}
               key={index}
             >
-              <div
-                className="bg-[#F2FFE6] max-w-[295px] max-h-[232px] w-full h-auto rounded-lg flex flex-col justify-between items-center p-4 shadow-custom"
-              >
-                <p className="text-center font-bold text-sm text-md text-lg">
+              <div className="bg-[#F2FFE6] w-full h-[170px]  sm:h-[250px]  rounded-lg flex flex-col justify-between items-center p-4 shadow-custom">
+                <p className="text-center font-bold text-xs sm:text-sm md:text-md lg:text-lg line-clamp-2 mb-4">
                   {subcategory.name}
                 </p>
-                <img
-                  src={beverage1}
-                  alt={subcategory.name}
-                  className="w-full h-auto max-w-[215px] max-h-[163px] object-cover"
-                />
+                <div className=" w-[100px] h-[100px] sm:w-[160px] sm:h-[160px] md:w-[198px] md:h-[166px] object-fit ">
+                  <img
+                    src={
+                      subcategory.image_url
+                        ? subcategory.image_url
+                        : defaultImage
+                    }
+                    alt={subcategory.name}
+                    className=" w-full h-full "
+                  />
+                </div>
               </div>
             </Link>
           ))}
@@ -127,3 +135,4 @@ const Groceries = () => {
 };
 
 export default Groceries;
+

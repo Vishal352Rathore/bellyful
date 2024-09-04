@@ -44,7 +44,7 @@ const Faqs = () => {
         {faqItems.map((item, index) => (
           <div
             key={index}
-            className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700"
+            className="w-full max-w-4xl bg-white border border-gray-200 rounded-lg shadow-md"
           >
             <div
               className={`flex items-center justify-between p-4 cursor-pointer ${

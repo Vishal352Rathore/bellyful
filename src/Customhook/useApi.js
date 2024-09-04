@@ -15,6 +15,7 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     if (!url) return; 
     fetchData();
   }, [url, method, body, token]);
+  
 
   async function fetchData() {
     const options = {
@@ -40,10 +41,7 @@ function useApi(url, method = 'GET', body = null ,token = null) {
     }
   }
 
-
   return { data, loading, error,fetchData };
 }
 
 export default useApi;
-
-
