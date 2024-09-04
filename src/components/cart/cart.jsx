@@ -199,9 +199,9 @@ const Cart = () => {
                 <p className="text-[15px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
                   {items?.amazonPrice}
                 </p>
-                <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
+                {/* <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
                   5 liter
-                </p>
+                </p> */}
               </div>
               <div className="shadow-md p-2 lg:p-4 sm:p-1 rounded-2xl flex flex-col items-center justify-center bg-white w-[125px] md:w-1/6 sm:w-1/3">
                 <p className="text-[20px] md:text-[24px] text-gray-800 font-medium leading-tight">
@@ -210,9 +210,9 @@ const Cart = () => {
                 <p className="text-[15px] md:text-[40px] text-[#6CBD44] font-bold leading-tight">
                   {items?.carrefourPrice || "NA"}
                 </p>
-                <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
+                {/* <p className="text-gray-600 text-[14px] md:text-[16px] leading-tight">
                   5 liter
-                </p>
+                </p> */}
               </div>
             </div>
           ))}
