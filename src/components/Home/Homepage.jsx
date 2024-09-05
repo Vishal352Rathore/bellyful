@@ -43,7 +43,7 @@ const Homepage = () => {
           <p className="text-2xl md:text-3xl text-black font-semibold">
             Shop by Store
           </p>
-          <div className="relative mt-2 md:mt-0">
+          {/* <div className="relative mt-2 md:mt-0">
             <input
               type="search"
               placeholder="Academic City"
@@ -53,24 +53,10 @@ const Homepage = () => {
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
               fontSize="small"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col justify-center md:flex-row gap-5 md:gap-10">
-          <Link to="Groceries" state={{category:"house_hold"}}>
-            <div className="bg-household-cleaners-gradient relative flex justify-center items-center md:p-10  p-5 w-full md:w-[44vw] h-auto border rounded-xl">
-              <div className="text-center">
-                <div className=" mb-5 text-lg md:text-xl text-black font-semibold">
-                  Household Cleaners
-                </div>
-                <img
-                  className=" w-full md:w-[460px] h-auto md:h-[194px]"
-                  src={householdCleaners}
-                  alt="householdCleaners"
-                />
-              </div>
-            </div>
-          </Link>
           <Link to="Groceries" state={{category:"groceries"}}>
             <div className="bg-grocery-gradient relative flex justify-center items-center p-5 md:p-10 w-full md:w-[44vw] h-auto border rounded-xl">
               <div className="text-center">
@@ -81,6 +67,20 @@ const Homepage = () => {
                   className=" bottom-4 w-full md:w-[460px] h-auto md:h-[194px]"
                   src={grocery}
                   alt="grocery"
+                />
+              </div>
+            </div>
+          </Link>
+          <Link to="Groceries" state={{category:"house_hold"}}>
+            <div className="bg-household-cleaners-gradient relative flex justify-center items-center md:p-10  p-5 w-full md:w-[44vw] h-auto border rounded-xl">
+              <div className="text-center">
+                <div className=" mb-5 text-lg md:text-xl text-black font-semibold">
+                  Household Cleaners
+                </div>
+                <img
+                  className=" w-full md:w-[460px] h-auto md:h-[194px]"
+                  src={householdCleaners}
+                  alt="householdCleaners"
                 />
               </div>
             </div>

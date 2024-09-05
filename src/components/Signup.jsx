@@ -222,6 +222,7 @@ const Signup = ({ toggleForm }) => {
   const handleCountryCodeChange = (e) => {
     setFormData({ ...formData, countryCode: e.target.value });
   };
+  
   const validateForm = () => {
     const errors = {};
     const passwordRegex = /^.{6,10}$/;
@@ -403,7 +404,6 @@ const Signup = ({ toggleForm }) => {
                       required
                       value={formData.password}
                       minLength="6"
-                      maxLength="12"
                       onChange={handleInputChange}
                       onKeyDown={handleKeyDown}
                     />
@@ -435,7 +435,6 @@ const Signup = ({ toggleForm }) => {
                       required
                       value={formData.confirmPassword}
                       minLength="6"
-                      maxLength="12"
                       onChange={handleInputChange}
                       onKeyDown={handleKeyDown}
                     />

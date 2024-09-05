@@ -156,7 +156,7 @@ const Cart = () => {
             />
           </div>
         </div>
-        <div className="overflow-auto max-h-[calc(100vh-500px)] p-4 sm:p-10  ">
+        <div className="overflow-auto max-h-[calc(100vh-300px)] p-4 sm:p-10  ">
           {cartItems?.map((items, index) => (
             <div className="flex gap-6 mt-8 md:mt-14" key={index}>
               {/* {/ Product Section /} */}
@@ -219,7 +219,7 @@ const Cart = () => {
         </div>
       </div>
       {/* {/ Total and Checkout Section /} */}
-      <div className="flex gap-6 p-4 sm:p-6">
+      <div className="flex gap-6 p-4 sm:p-6 md:pt-48">
         <div className="flex flex-col items-center justify-center gap-6 w-full sm:w-1/6 md:w-1/6">
           <div className="lg:px-6 lg:py-4 sm:px-10 sm:py-8 md:px-16 md:py-12 rounded-2xl flex flex-col items-center justify-center w-full">
             <div className="w-[35px] h-[35px] sm:w-[50px] sm:h-[50px] md:w-[63px] md:h-[63px]">
@@ -235,7 +235,7 @@ const Cart = () => {
           </div>
         </div>
 
-        <div className="shadow-lg px-3 py-3 lg:px-6 sm:px-10 sm:py-8 md:px-12 md:py-8 rounded-2xl flex flex-col items-center bg-[#F1FFE3] w-full h-full sm:w-1/6 md:w-1/6">
+        <div className="shadow-lg px-3 py-3 lg:px-2 sm:px-10 sm:py-8 md:px-12 md:py-8 rounded-2xl flex flex-col items-center bg-[#F1FFE3] w-full h-full sm:w-1/6 md:w-1/6">
           <p className="text-[18px] md:text-[24px] text-gray-800 font-medium leading-tight">
             AED
           </p>
@@ -247,7 +247,7 @@ const Cart = () => {
           </button>
         </div>
 
-        <div className="shadow-lg px-3 py-3 lg:px-6  sm:px-10 sm:py-8 md:px-12 md:py-8 rounded-2xl flex flex-col items-center bg-white w-full h-full sm:w-1/6 md:w-1/6">
+        <div className="shadow-lg px-3 py-3 lg:px-2  sm:px-10 sm:py-8 md:px-12 md:py-8 rounded-2xl flex flex-col items-center bg-white w-full h-full sm:w-1/6 md:w-1/6">
           <p className="text-[18px] md:text-[24px] text-gray-800 font-medium leading-tight">
             AED
           </p>

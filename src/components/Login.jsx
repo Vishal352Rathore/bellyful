@@ -183,7 +183,6 @@ const Login = ({ toggleForm, setModalOpen }) => {
                 name="password"
                 placeholder="Enter Your Password"
                 minLength="6"
-                maxLength="12"
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 required

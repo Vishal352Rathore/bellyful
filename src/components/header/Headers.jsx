@@ -1,31 +1,31 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useContext } from "react";
 import logo from "../../images/belliful_logo.png";
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
-import DehazeIcon from "@mui/icons-material/Dehaze";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoginModal from "../LoginModel";
 import AllCategoryDropdown from "../ui/DropDown";
 import useApi from "../../Customhook/useApi";
 import "./Header.css";
-import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
-import debounce from "lodash/debounce";
+import { SearchContext } from "../../context/SearchContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(12);
-  const [triggerSearch, setTriggerSearch] = useState(false);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("userToken");
-  const location = useLocation();
-  // Construct URL with query parameters
-  const apiUrl = `${process.env.REACT_APP_GET_PRODUCT_DATABYNAME}?searchTerm=${query}&page=${page}&limit=${limit}`;
-
+  const token = localStorage.getItem("userToken"); // Get values from context
   const { headerState } = useAppContext();
+  const { query, setQuery, handleSearch } = useContext(SearchContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim() !== "") {
+      handleSearch(query); // Ensure query is correctly passed
+    } else {
+      console.warn("Search query is empty");
+    }
+  };
+  
 
   // console.log("headerState",headerState);
 
@@ -36,12 +36,12 @@ const Header = () => {
   // var token = localStorage.getItem("userToken");
 
   useEffect(() => {
-  if(!token){
-    setModalOpen(true);
-  }
-  }, [])
-  
-  const { data, loading, error ,fetchData} = useApi(
+    if (!token) {
+      setModalOpen(true);
+    }
+  }, []);
+
+  const { data, loading, error, fetchData } = useApi(
     process.env.REACT_APP_GET_CATEGORY_API_URL,
     "GET",
     null,
@@ -55,58 +55,14 @@ const Header = () => {
     setIsMenuOpen(false);
   };
 
-  // Debounce the search function
-  const debouncedFetchData = useCallback(
-    debounce(() => {
-      fetchData();
-    }, 500), // Adjust debounce delay as needed
-    [fetchData, page, limit]
-  );
-
-  useEffect(() => {
-    if (triggerSearch) {
-      debouncedFetchData(); // Fetch data based on the current page and query
-      setTriggerSearch(false); // Reset trigger to avoid re-fetching
-    }
-  }, [triggerSearch, debouncedFetchData]);
-
-  useEffect(() => {
-    if (data) {
-      console.log("All Product by categories:", data);
-      if (
-        data.status === true &&
-        data.items &&
-        Array.isArray(data.items.products) &&
-        data.items.products.length > 0
-      ) {
-        // Redirect to /searchcategoryname and pass the products, category name, page, and limit
-        navigate(`/searchcategoryname`, {
-          state: {
-            products: data.items.products,
-            categoryName: data.items.products[0].category || "Data is not",
-            page, // Pass the current page number
-            limit, // Pass the limit per page
-          },
-        });
-      } else {
-        console.warn("No products found or data structure is invalid", data);
-      }
-    }
-  }, [data, error, page, limit]);
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-    setTriggerSearch(true); // Trigger the search on page change
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (query.trim() !== "") {
-      setTriggerSearch(true);
-    } else {
-      console.warn("Search query is empty");
-    }
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (query.trim() !== "") {
+  //     handleSearch();
+  //   } else {
+  //     console.warn("Search query is empty");
+  //   }
+  // };
 
   useEffect(() => {
     if (!token) {
@@ -139,7 +95,12 @@ const Header = () => {
 
   var userId = localStorage.getItem("userId");
 
-  const { data:cartData, loading:cartLoading, error:cartError , fetchData : cartFetch} = useApi(
+  const {
+    data: cartData,
+    loading: cartLoading,
+    error: cartError,
+    fetchData: cartFetch,
+  } = useApi(
     `${process.env.REACT_APP_GET_CART}?userId=${userId}`,
     "GET",
     null,
@@ -147,9 +108,9 @@ const Header = () => {
   );
 
   useEffect(() => {
-    cartFetch()
-  }, [headerState])
-  
+    cartFetch();
+  }, [headerState]);
+
   useEffect(() => {
     if (cartData) {
       console.log("All cart items", cartData);
@@ -215,7 +176,7 @@ const Header = () => {
                   </svg>
                 </div>
                 <input
-                  type="search"
+                  type="text"
                   name="search"
                   placeholder="Enter product name"
                   value={query}
@@ -239,10 +200,12 @@ const Header = () => {
                   to="Cart"
                   className="flex items-center text-black text-base subpixel-antialiased font-semibold hover:text-green-500"
                 >
-                 <div className="relative">
-                 <p className="absolute m-0 -right-1 -top-3 w-5 h-5 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
-                 <ShoppingBasketIcon className="mr-1 h-4" />
-                  </div> 
+                  <div className="relative">
+                    <p className="absolute m-0 -right-1 -top-3 w-5 h-5 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center">
+                      {cartItemsLength}
+                    </p>
+                    <ShoppingBasketIcon className="mr-1 h-4" />
+                  </div>
                   Cart
                 </Link>
               </li>
@@ -297,7 +260,7 @@ const Header = () => {
               </svg>
             </button>
           </div>
-          <ul className="flex flex-col space-y-4">
+          <ul className="flex flex-col space-y-4 mt-6 text-left">
             <li>
               <Link
                 to="/"
@@ -319,15 +282,16 @@ const Header = () => {
             <li>
               <Link
                 to="Cart"
-                className="text-black text-base font-semibold hover:text-green-500 flex items-center"
+                className="text-black text-base font-semibold hover:text-green-500 flex items-center mt-2"
                 onClick={handleMenuItemClick}
               >
                 <div className="relative">
-                <p className="absolute left-3 -top-2 w-4 h-4 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center" >{cartItemsLength}</p>
-                <ShoppingBasketIcon className="mr-1 h-4" />
-                Cart
+                  <p className="absolute left-3 -top-2 w-4 h-4 text-xs text-center text-white bg-red-600 rounded-full flex items-center justify-center">
+                    {cartItemsLength}
+                  </p>
+                  <ShoppingBasketIcon className="mr-1 h-4" />
+                  Cart
                 </div>
-                
               </Link>
             </li>
             <li className="flex items-center space-x-1">
@@ -354,36 +318,38 @@ const Header = () => {
             </div>       */}
           <div className="flex items-center bg-lime-300 h-[29px] w-full border border-lime-200 rounded-full md:hidden">
             <form onSubmit={handleSubmit} className="relative w-full">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <svg
-            className="w-5 h-5 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
-            />
-          </svg>
-        </div>
-        <input
-                  type="search"
-                  name="search"
-                  placeholder="Enter product name"
-                  className="p-2 pl-10 pr-14 border text-black sm:text-black border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => setQuery(e.target.value)}
-                />
-        <button
-          type="submit"
-          className="absolute inset-y-0 right-0 pr-3 flex items-center"
-        >
-          <span className="text-black text-base font-semibold">Search</span>
-        </button>
-      </form>
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                name="search"
+                placeholder="Enter product name"
+                className="p-2 pl-10 pr-14 border text-black sm:text-black border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2"
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              >
+                <span className="text-black text-base font-semibold">
+                  Search
+                </span>
+              </button>
+            </form>
           </div>
           {/* All Category Dropdown for Medium and Larger Screens */}
           <div className="hidden md:flex items-center bg-lime-300 h-[29px] w-[205px] border border-lime-200 rounded-full">
@@ -404,11 +370,8 @@ const Header = () => {
               </li>
             </ul>
           </div>
-
         </div>
-        </div>
-
-     
+      </div>
     </>
   );
 };

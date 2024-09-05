@@ -18,7 +18,6 @@ function App() {
   return (
     <div className="App">
       <AppProvider>
-        <BrowserRouter>
           <Routes>
             {/* <Route path="/home" element={<DefaultLayout />} /> */}
             {/* <Route path="login" element={<Login />} />
@@ -26,6 +25,8 @@ function App() {
 
             <Route path="/" element={<DefaultLayout />}>
               <Route index element={<Homepage />} />
+              <Route path="searchcategoryname" element={<Searchcategoryname />} />
+              <Route path="searchcategoryname/ProductDescription" element={<ProductDescription />}/>
               <Route path="subcategory" element={<SubCategory />} />
               <Route path="Faqs" element={<Faqs />} />
               <Route path="Groceries" element={<Groceries />} />
@@ -58,7 +59,6 @@ function App() {
               />
             </Route>
           </Routes>
-        </BrowserRouter>
       </AppProvider>
     </div>
   );

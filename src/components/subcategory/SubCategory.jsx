@@ -117,7 +117,6 @@
 // };
 // export default SubCategory;
 
-
 import React, { useState, useEffect } from "react";
 import subCategoryBannerBg from "../../images/sub-category-banner-bg.png";
 import subCategoryBanner from "../../images/sub-category-banner.png";
@@ -126,9 +125,8 @@ import useApi from "../../Customhook/useApi";
 
 const SubCategory = () => {
   const location = useLocation();
-  const { categoryName, category } = location.state || {};
-
-  const [currentPage, setCurrentPage] = useState("Colddriks");
+  const { categoryName, category} = location.state || {};
+  const [currentPage, setCurrentPage] = useState(categoryName);
   const [page, setPage] = useState(1);
   const [product, setProduct] = useState([]);
   const [totalPages, setTotalPages] = useState(1); // State to store the total number of pages
@@ -178,36 +176,43 @@ const SubCategory = () => {
           />
         </div>
       </div>
+      <p className="p-4 md:pl-10 md:text-2xl bg-green-100">
+        {category} &gt; {categoryName} 
+      </p>
 
       <div className="flex justify-center p-4 sm:p-4 md:mx-10 sm:mx-4 md:p-4 mt-10 md:mt-20">
         <div
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full"
           style={{ gap: "30px" }}
         >
-          {product?.length > 0 ? product.map((product, index) => (
-            <Link
-              to="ProductDescription"
-              state={{ productName: product.name }}
-              key={index}
-            >
-              <div className="shadow-lg shadow-gray-400/50 w-full p-4 rounded-lg flex flex-col justify-center items-center bg-white h-[225px]">
-                <img
-                  src={product.image_path}
-                  alt={product.name}
-                  className="w-[85px] h-[100px] sm:w-[100px] sm:h[120px] md:w-[140px] lg:w-[100px] object-fit mb-4"
-                />
-                <div className="flex flex-col items-start text-left sm:text-left w-full">
-                  <p className="text-green-600 font-semibold text-sm sm:text-base">
-                    {product.price}
-                  </p>
-                  <p className="text-gray-800 mt-2 text-sm sm:text-base line-clamp-2">
-                    {product.name}
-                  </p>
-                  <p className="text-gray-600 text-sm sm:text-base"></p>
+          {product?.length > 0 ? (
+            product.map((product, index) => (
+              <Link
+                to="ProductDescription"
+                state={{ productName: product.name }}
+                key={index}
+              >
+                <div className="shadow-lg shadow-gray-400/50 w-full p-4 rounded-lg flex flex-col justify-center items-center bg-white h-[225px]">
+                  <img
+                    src={product.image_path}
+                    alt={product.name}
+                    className="w-[85px] h-[100px] sm:w-[100px] sm:h[120px] md:w-[140px] lg:w-[100px] object-fit mb-4"
+                  />
+                  <div className="flex flex-col items-start text-left sm:text-left w-full">
+                    <p className="text-green-600 font-semibold text-sm sm:text-base">
+                      {product.price}
+                    </p>
+                    <p className="text-gray-800 mt-2 text-sm sm:text-base line-clamp-2">
+                      {product.name}
+                    </p>
+                    <p className="text-gray-600 text-sm sm:text-base"></p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          )) : <p>No Product Available</p>}
+              </Link>
+            ))
+          ) : (
+            <p>No Product Available</p>
+          )}
         </div>
       </div>
 

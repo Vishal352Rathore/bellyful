@@ -10,13 +10,13 @@ import defaultImage from "../images/assorted-beverage-1.png";
 const Groceries = () => {
   const location = useLocation();
   console.log("location", location);
-  const { category } = location?.state || "house_hold";
+  const { category ,categoryName } = location?.state || "house_hold";
 
   const [subcategories, setSubcategories] = useState([]);
 
   // const [isSubcategory, setIsSubcategory] = useState(false);
 
-  var token = localStorage.getItem("userToken");
+  var token = localStorage.getItem("userToken"); 
 
   const { data, loading, error } = useApi(
     `${process.env.REACT_APP_GET_CATEGORY_API_URL}?category=${category}`,
@@ -74,8 +74,9 @@ const Groceries = () => {
           </div>
         </div>
       </div>
+      <p className="p-4 md:pl-10 md:text-2xl bg-green-100">{category} &gt; {categoryName}</p>
 
-      <div className="flex justify-center md:justify-end p-4">
+      {/* <div className="flex justify-center md:justify-end p-4">
         <div className="relative w-full max-w-[418px]">
           <input
             type="search"
@@ -87,7 +88,7 @@ const Groceries = () => {
             fontSize="small"
           />
         </div>
-      </div>
+      </div> */}
       <div className="flex justify-center p-4 md:mx-10 sm:mx-4 md:p-4 ">
         <div
           className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full"
