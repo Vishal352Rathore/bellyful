@@ -131,7 +131,7 @@ const Login = ({ toggleForm, setModalOpen }) => {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(postData.password)) {
       errors.password =
-        "Password must be, 1 uppercase, 1 lowercase, 1 number, and 1 special char.";
+        "Password must include uppercase, lowercase, number, special character, and be 6+ chars.";
     }
 
     return errors;

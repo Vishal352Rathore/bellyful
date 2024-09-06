@@ -258,7 +258,7 @@ const Signup = ({ toggleForm }) => {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(formData.password)) {
       errors.password =
-        "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character, and be at least 6 characters long.";
+        "Password must include uppercase, lowercase, number, special character, and be 6+ chars.";
     }
   
     if (formData.password !== formData.confirmPassword) {

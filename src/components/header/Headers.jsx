@@ -335,7 +335,7 @@ const Header = () => {
                 </svg>
               </div>
               <input
-                type="search"
+                type="text"
                 name="search"
                 placeholder="Enter product name"
                 className="p-2 pl-10 pr-14 border text-black sm:text-black border-gray-300 w-full h-8 rounded-full focus:outline-none focus:ring-2"
