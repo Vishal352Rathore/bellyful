@@ -119,7 +119,7 @@ const Login = ({ toggleForm, setModalOpen }) => {
 
   const validateForm = () => {
     const errors = {};
-    const passwordRegex = /^.{6,10}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
     if (!postData.email.trim()) {
       errors.email = "Email is required";
@@ -130,7 +130,8 @@ const Login = ({ toggleForm, setModalOpen }) => {
     if (!postData.password) {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(postData.password)) {
-      errors.password = "Password must be between 6 to 10 characters";
+      errors.password =
+        "Password must be, 1 uppercase, 1 lowercase, 1 number, and 1 special char.";
     }
 
     return errors;

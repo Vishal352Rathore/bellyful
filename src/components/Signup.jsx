@@ -7,6 +7,8 @@ import facebook from "../images/facebook.png";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 // Reusable Input Component
 const InputField = ({
@@ -49,7 +51,7 @@ const Signup = ({ toggleForm }) => {
     nationality: "United Arab Emirates",
     dateOfBirth: "",
   });
-
+  const [value, setValue] = useState();
   const [errors, setErrors] = useState({});
   const [isRagisterd, setIsRagisterd] = useState(false);
   const [countryCodes, setCountryCodes] = useState([]);
@@ -214,50 +216,67 @@ const Signup = ({ toggleForm }) => {
     fetchCountryData();
   }, []);
 
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    if (e?.target) {
+      // For regular input fields
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    } else {
+      // For PhoneInput, since it doesn't have `e.target`
+      setFormData({ ...formData, mobileNumber: e });
+    }
   };
 
-  const handleCountryCodeChange = (e) => {
-    setFormData({ ...formData, countryCode: e.target.value });
-  };
-  
+  // const handleCountryCodeChange = (e) => {
+  //   setFormData({ ...formData, countryCode: e.target.value });
+  // };
+
   const validateForm = () => {
     const errors = {};
-    const passwordRegex = /^.{6,10}$/;
-
-    if (
-      !formData.mobileNumber.trim() ||
-      !/^\d{10}$/.test(formData.mobileNumber)
-    ) {
-      errors.MobileNumber = "Mobile number must be exactly 10 digits";
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+  
+    // Clean the mobile number by removing any non-digit characters except the '+' sign
+    const cleanedMobileNumber = formData.mobileNumber.replace(/[^\d]/g, '');
+  
+    // Check if the mobile number is valid (no limit on digits, but must be numeric)
+    if (!cleanedMobileNumber.trim()) {
+      errors.MobileNumber = "Mobile number is required and must be valid.";
     }
-
+  
     if (
       !formData.email.trim() ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
     ) {
       errors.Email = "Valid email is required";
     }
-
+  
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (!passwordRegex.test(formData.password)) {
-      errors.password = "Must be between 6 to 10 characters";
+      errors.password =
+        "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character, and be at least 6 characters long.";
     }
-
+  
     if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = "Passwords do not match";
     }
-
+  
     return errors;
   };
+  
 
   const getMinDate = () => {
     const today = new Date();
-    const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
-    return minDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    const minDate = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+    return minDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
   };
 
   // Minimum date for the date picker
@@ -324,29 +343,17 @@ const Signup = ({ toggleForm }) => {
                       {"Mobile Number"}
                     </label>
                     <div className="flex border rounded-lg border-[#E3E3E3]">
-                      <select
-                        id="country-code"
-                        name="countryCode"
-                        className="h-[30px] w-[23%] md:w-[35%]"
-                        value={formData.countryCode}
-                        onChange={handleCountryCodeChange}
-                        required
-                      >
-                        {countryCodes.map(({ name, code }, index) => (
-                          <option key={`${name}-${code}-${index}`} value={code}>
-                            {code}
-                          </option>
-                        ))}
-                      </select>
-                      <input
-                        id="mobile-number"
-                        type="tel"
-                        className="h-[30px] md:w-[75%] px-4 "
-                        name="mobileNumber"
+                      <PhoneInput
+                        international
+                        countryCallingCodeEditable={false}
+                        defaultCountry="AE"
+                        className="h-[28px] px-4"
+                        value={value}
                         placeholder="Mobile Number"
-                        required
-                        value={formData.mobileNumber}
-                        onChange={handleInputChange}
+                        onChange={(phone) => {
+                          setValue(phone); // Update the phone number state
+                          handleInputChange(phone); // Handle phone number change
+                        }}
                         onKeyDown={handlemobilenum}
                       />
                     </div>
@@ -355,9 +362,6 @@ const Signup = ({ toggleForm }) => {
                         {errors.MobileNumber}
                       </p>
                     )}
-                    {/* {errors.api && (
-                      <p className="text-red-500 text-sm">{errors.api}</p>
-                    )} */}
                   </div>
                   <div className="flex flex-col md:w-[48%] w-full ">
                     <label
@@ -383,7 +387,7 @@ const Signup = ({ toggleForm }) => {
                     )}
                     {/* {errors.api && (
                     <p className="text-red-500 text-sm">{errors.api}</p>
-                  )} */}
+                    )} */}
                   </div>
                 </div>
 
@@ -561,3 +565,31 @@ const Signup = ({ toggleForm }) => {
   );
 };
 export default Signup;
+
+{
+  /* <select
+                        id="country-code"
+                        name="countryCode"
+                        className="h-[30px] w-[23%] md:w-[35%]"
+                        value={formData.countryCode}
+                        onChange={handleCountryCodeChange}
+                        required
+                      >
+                        {countryCodes.map(({ name, code }, index) => (
+                          <option key={`${name}-${code}-${index}`} value={code}>
+                            {code}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        id="mobile-number"
+                        type="tel"
+                        className="h-[30px] md:w-[75%] px-4"
+                        name="mobileNumber"
+                        placeholder="Mobile Number"
+                        required
+                        value={formData.mobileNumber}
+                        onChange={handleInputChange}
+                        onKeyDown={handlemobilenum}
+                      /> */
+}
